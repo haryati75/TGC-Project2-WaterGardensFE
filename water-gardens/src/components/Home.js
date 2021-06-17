@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Home() {
+function Home(props) {
     return (
         <React.Fragment>
             <h1>Featured Gardens and Trending Plants</h1>
@@ -8,8 +8,8 @@ function Home() {
             <p>2. Show Latest 3 Gardens created</p>
             <p>3. Show Top Aquascaper with highest ratings, feature his/her gardens</p>
             <p>4. Show Top 5 Easy Care plants with highest likes</p>
-            <p>Link to see more Gardens...</p>
-            <p>Link to see more Plants...</p>
+            <p>Click <a href="#" className="card-link" onClick={()=>{props.setActive("garden-listing")}}>here</a> to see more Gardens...</p>
+            <p>Click <a href="#" className="card-link" onClick={()=>{props.setActive("plant-listing")}}>here</a> to see more Plants...</p>
         </React.Fragment>
     )
 }

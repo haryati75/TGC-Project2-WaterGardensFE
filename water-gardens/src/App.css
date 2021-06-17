@@ -1,3 +1,12 @@
+ul.nav-tabs > li.nav-item > button.active {
+  background-color: #344FA1;
+  color: white;
+}
+
+h1 {
+  padding: 10px;
+}
+
 .popup-background {
     position: fixed;
     width: 100%;

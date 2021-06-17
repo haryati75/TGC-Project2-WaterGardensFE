@@ -9,6 +9,7 @@ import Footer from './Footer';
 import Home from './Home';
 import PlantAddNew from './PlantAddNew';
 import PlantListing from './PlantListing';
+import PlantViewDetails from './PlantViewDetails';
 import GardenAddNew from './GardenAddNew';
 import GardenListing from './GardenListing';
 
@@ -17,6 +18,9 @@ const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
 class WaterGardens extends React.Component {
     state = {
         'active': 'home',
+        'showPlant': false,
+        'plantBeingShown': 0,
+
         'plants': [],
         'gardens': [],
 
@@ -32,7 +36,7 @@ class WaterGardens extends React.Component {
         'newGardenComplexityLevel': "",
         'newGardenAquascaperName': "",
         'newGardenAquascaperEmail': "", 
-
+        
         'deleteWhat': "",
         'deleteId': null,
         'showDeletePopup': false
@@ -72,11 +76,11 @@ class WaterGardens extends React.Component {
             'lighting' : this.state.newPlantLighting,
             'likes' : 0
         })
-        // return to listing
+        // add the latest to the first of array, then return to listing
         this.setState({
             'plants': [
-                ...this.state.plants,
-                response.data[0]
+                response.data[0],
+                ...this.state.plants
             ],
             'newPlantName': "",
             'newPlantAppearance': "",
@@ -102,8 +106,9 @@ class WaterGardens extends React.Component {
         // return to listing
         this.setState({
             'gardens': [
-                ...this.state.gardens,
-                response.data[0]
+                response.data[0],
+                ...this.state.gardens
+                
             ],
             'newGardenName': "",
             'newGardenDesc': "",
@@ -115,6 +120,53 @@ class WaterGardens extends React.Component {
             'active': 'garden-listing'
         })
     }
+
+    increasePlantLikesByOne = async (plantId) => {
+        try {
+            await axios.patch(baseURL + "/plant/" + plantId + "/likes/add_one")
+
+            // update the plant in the plants array
+            let wantedPlant = this.state.plants.filter( p => p._id === plantId ? p : null)[0];
+            let clonedPlant = {...wantedPlant};
+            clonedPlant.likes++;
+
+            let indexToChange = this.state.plants.findIndex( p => p._id === clonedPlant._id );
+            let clonedArray = [
+                ...this.state.plants.slice(0, indexToChange),
+                clonedPlant,
+                ...this.state.plants.slice(indexToChange + 1)
+            ];
+            this.setState({
+                plants : clonedArray,
+                'active': 'plant-listing'
+            })
+
+        } catch (e) {
+            alert("Increase like failed. See console.")
+            console.log(e)
+        }            
+    }
+
+    viewPlantDetails = async (plantId) => {
+        // get the plant being viewed from API
+        let response = await axios.get(baseURL + "/plant/" + plantId);
+
+        this.setState({
+            'showPlant': true,
+            'plantBeingShown': response.data,
+            'active': "plant-view"
+        })
+    }
+
+    hidePlantDetails = () => {
+
+        this.setState({
+            'showPlant': false,
+            'plantBeingShown': null,
+            'active': "plant-listing"
+        });
+
+    };
 
     renderDeletePopup() {
         if (this.state.showDeletePopup) {
@@ -221,11 +273,12 @@ class WaterGardens extends React.Component {
         }
     }
 
+    // Show the selected Tab
     renderContent() {
         if (this.state.active === 'home') {
             return (
                 <React.Fragment>
-                    <Home />
+                    <Home setActive={this.setActive}/>
                 </React.Fragment>
             );
         } else if (this.state.active === 'garden-listing') {
@@ -237,11 +290,24 @@ class WaterGardens extends React.Component {
                     />
                 </React.Fragment>
             );
+        } else if (this.state.active === 'plant-view') {
+            return (
+                <React.Fragment>
+                    <PlantViewDetails 
+                        plant={this.state.plantBeingShown} 
+                        increasePlantLikesByOne={this.increasePlantLikesByOne}
+                        displayDeletePopup={this.displayDeletePopup}
+                        hidePlantDetails={this.hidePlantDetails}
+                    />
+                </React.Fragment>
+            );
         } else if (this.state.active === 'plant-listing') {
             return (
                 <React.Fragment>
                     <PlantListing 
                         plants={this.state.plants} 
+                        viewPlantDetails={this.viewPlantDetails}
+                        increasePlantLikesByOne={this.increasePlantLikesByOne}
                         displayDeletePopup={this.displayDeletePopup}
                     />
                 </React.Fragment>
@@ -304,7 +370,7 @@ class WaterGardens extends React.Component {
                             >Gardens
                             </button>
                         </li>
-                        <li className="nav-item">
+                        <li className={this.state.showPlant ? "nav-item d-none" : "nav-item"}>
                             <button 
                                 className={this.state.active==="plant-listing" ? "nav-link active" : "nav-link"}
                                 aria-current={this.state.active==="plant-listing" ? "page" : "false"} 
@@ -312,6 +378,16 @@ class WaterGardens extends React.Component {
                                     this.setActive("plant-listing");
                                 }}
                             >Aquatic Plants
+                            </button>
+                        </li>
+                        <li className={this.state.showPlant ? "nav-item" : "nav-item d-none"}>
+                            <button 
+                                className={this.state.active==="plant-view" ? "nav-link active" : "nav-link"}
+                                aria-current={this.state.active==="plant-view" ? "page" : "false"} 
+                                onClick={() => {
+                                    this.setActive("plant-view");
+                                }}
+                            >View Plant
                             </button>
                         </li>
                         <li className="nav-item">

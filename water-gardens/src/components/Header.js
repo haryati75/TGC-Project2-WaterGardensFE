@@ -5,7 +5,7 @@ function Header() {
         <React.Fragment>
             <div className="container">
                 <h1>Welcome to Water Gardens Gallery</h1>
-                <p>A website that features aquascaping aquariums by hobbyists around the world, and the aquatic plants that are found in many of these gardens.</p>
+                <p className="p-3">A website that features aquascaping aquariums by hobbyists around the world, and the aquatic plants that are found in many of these gardens.</p>
             </div>
         </React.Fragment>
     )

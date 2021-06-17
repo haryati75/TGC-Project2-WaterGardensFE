@@ -11,32 +11,21 @@ function PlantListing(props) {
                             <h3 className="card-title">
                                 {p.name}
                             </h3>
-                            <h5>Ease of Care: {p.care}</h5>
-                            <h5>Lighting: {p.lighting}</h5>
-                            <p>Appearance: {p.appearance}</p>
-                            <p>Likes: {p.likes}</p>
-                            <p>Keywords:</p>
-                            <ul>
-                                {Array.isArray(p.smartTags) ? p.smartTags.map(t => <li key={t}>{t}</li>) : null}
-                            </ul>
+                            <p className="card-text">Appearance: {p.appearance}</p>
+                            {/* <p>Likes: {p.likes}</p> */}
                             <button
                                 className="btn btn-info me-3"
-                                onClick={props.increaseLikes}
-                            >Increase Likes</button>
-                            <button
-                                className="btn btn-primary me-3"
-                                onClick={props.addSmartTags}
-                            >Add Keywords</button>
+                                onClick={() => {
+                                    props.increasePlantLikesByOne(p._id);
+                                }}
+                            >Increase Likes: {p.likes}</button>
+
                             <button
                                 className="btn btn-success me-3"
-                                onClick={props.editPlant}
-                            >Edit Plant</button>
-                            <button
-                                className="btn btn-secondary me-3"
                                 onClick={() => {
-                                    props.displayDeletePopup(p._id, "plant");
+                                    props.viewPlantDetails(p._id);
                                 }}
-                            >Delete Plant</button>
+                            >View Plant Details</button>
                         </div>
 
                     </div>
