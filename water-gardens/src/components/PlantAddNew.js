@@ -1,12 +1,21 @@
 import React from 'react';
 
-function renderCareLevels(props) {
-    const careLevels = [
-        {key: "easy", label: "Easy"}, 
-        {key: "medium", label: "Medium"},
-        {key: "hard", label: "Hard"}
-    ]
+const careLevels = [
+    {key: "easy", label: "Easy"}, 
+    {key: "medium", label: "Medium"},
+    {key: "hard", label: "Hard"}
+]
 
+const lightingLevels = [
+    {key: "low", label: "Low"}, 
+    {key: "moderate-low", label: "Moderate-Low"},
+    {key: "moderate", label: "Moderate"},
+    {key: "moderate-high", label: "Moderate-High"},
+    {key: "high", label: "High"}
+]
+
+function renderCareLevels(props) {
+    // Radio buttons for Ease of Care 
     return (
         careLevels.map( c => 
             <React.Fragment key={c.key}>
@@ -27,14 +36,7 @@ function renderCareLevels(props) {
 }
 
 function renderLightingLevels(props) {
-    const lightingLevels = [
-        {key: "low", label: "Low"}, 
-        {key: "moderate-low", label: "Moderate-Low"},
-        {key: "moderate", label: "Moderate"},
-        {key: "moderate-high", label: "Moderate-High"},
-        {key: "high", label: "High"}
-    ]
-
+    // Dropdown list for Lighting
     return (
         <React.Fragment>
             <select 
@@ -53,7 +55,6 @@ function renderLightingLevels(props) {
             </select>
         </React.Fragment>
     )
-    
 }
 
 function PlantAddNew(props) {
@@ -66,7 +67,7 @@ function PlantAddNew(props) {
                     type="text"
                     className="form-control"
                     name="newPlantName"
-                    value={props.newPlantame}
+                    value={props.newPlantName}
                     onChange={props.updateFormField}
                 />
             </div>

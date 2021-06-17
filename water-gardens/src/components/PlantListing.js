@@ -33,7 +33,9 @@ function PlantListing(props) {
                             >Edit Plant</button>
                             <button
                                 className="btn btn-secondary me-3"
-                                onClick={props.deletePlant}
+                                onClick={() => {
+                                    props.displayDeletePopup(p._id, "plant");
+                                }}
                             >Delete Plant</button>
                         </div>
 
@@ -43,5 +45,6 @@ function PlantListing(props) {
         </React.Fragment>
     );
 }
+
 
 export default PlantListing;

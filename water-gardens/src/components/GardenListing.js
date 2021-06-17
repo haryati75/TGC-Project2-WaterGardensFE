@@ -32,7 +32,9 @@ function GardenListing(props) {
                             >Edit Garden</button>
                             <button
                                 className="btn btn-secondary me-3"
-                                onClick={props.deleteGarden}
+                                onClick={() => {
+                                    props.displayDeletePopup(g._id, "garden");
+                                }}
                             >Delete Garden</button>
                         </div>
                     </div>
