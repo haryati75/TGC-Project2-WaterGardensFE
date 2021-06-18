@@ -6,11 +6,10 @@ function PlantListing(props) {
             <h1>Plants Listing</h1>
             {props.plants.map( p => 
                 <React.Fragment key={p._id}>
-                    <div className="card">
+                    <div className="card" style={{width: "18rem"}}>
                         <div className="card-body">
-                            <h3 className="card-title">
-                                {p.name}
-                            </h3>
+                            <img className="card-img-top" src={p.photoURL} alt={p.name}/>
+                            <h3 className="card-title">{p.name}</h3>
                             <p className="card-text">Appearance: {p.appearance}</p>
                             {/* <p>Likes: {p.likes}</p> */}
                             <button

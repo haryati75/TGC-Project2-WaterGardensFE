@@ -7,6 +7,24 @@ h1 {
   padding: 10px;
 }
 
+footer {
+  border-top: solid 3px #2F5D62;
+  background-color: #DEEDF0;
+  width: 100%;
+}
+
+header {
+  background: url(./components/water-gardens-banner.jpg);
+  background-attachment: fixed;
+  background-position: center bottom;
+  background-size: cover;
+  width: 100%;
+}
+
+header > div {
+  color: white;
+}
+
 .popup-background {
     position: fixed;
     width: 100%;
@@ -26,4 +44,10 @@ h1 {
     border: 1px solid black;
     border-radius: 10px;
     transform: translate(-50%, -50%);
+  }
+
+
+  .card-img-top {
+    max-height: 300px;
+    max-width: 300px;
   }

@@ -20,22 +20,20 @@ function GardenListing(props) {
                             </ul>
                             <button
                                 className="btn btn-info me-3"
-                                onClick={props.addReview}
-                            >Add a Review</button>
-                            <button
-                                className="btn btn-primary me-3"
-                                onClick={props.addPlantToGarden}
-                            >Add Plant</button>
+                                onClick={props.addRatings}
+                            >Rate this Garden</button>
                             <button
                                 className="btn btn-success me-3"
-                                onClick={props.editGarden}
-                            >Edit Garden</button>
-                            <button
+                                onClick={()=>{
+                                    props.viewGardenDetails(g._id);
+                                }}
+                            >View Garden</button>
+                            {/* <button
                                 className="btn btn-secondary me-3"
                                 onClick={() => {
                                     props.displayDeletePopup(g._id, "garden");
                                 }}
-                            >Delete Garden</button>
+                            >Delete Garden</button> */}
                         </div>
                     </div>
                 </React.Fragment>

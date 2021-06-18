@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Rendered lists
 const careLevels = [
     {key: "easy", label: "Easy"}, 
     {key: "medium", label: "Medium"},
@@ -89,6 +90,17 @@ function PlantAddNew(props) {
                 <div className="label">Lighting:</div>
                 {renderLightingLevels(props)}
             </div>
+            <div>
+                <div className="label">Photo URL:</div>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="newPlantPhotoURL"
+                    value={props.newPlantPhotoURL}
+                    onChange={props.updateFormField}
+                />
+            </div>
+            <hr></hr>
             <button
                 className="btn btn-primary mt-3"
                 onClick={props.addNewPlant}

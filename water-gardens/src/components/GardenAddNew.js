@@ -60,7 +60,7 @@ function GardenAddNew(props) {
             <div>
                 <div className="label">Completion Date:</div>
                 <input
-                    type="text"
+                    type="date"
                     className="form-control"
                     name="newGardenCompletionDate"
                     value={props.newGardenCompletionDate}
