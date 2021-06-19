@@ -67,7 +67,7 @@ function renderSmartTags (tags, deleteSmartTag) {
                     {t}
                     <button className="btn btn-danger btn-sm ms-3"
                         onClick={() => { deleteSmartTag(t); }}
-                    >remove</button>
+                    ><i className="far fa-trash-alt"></i></button>
                 </li>
                 </React.Fragment>)
         tagsJSX.push(e);

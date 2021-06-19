@@ -77,6 +77,18 @@ function GardenAddNew(props) {
                     onChange={props.updateFormField}
                 />
             </div>
+            <div className="card">
+                <img className="card-img-top" src={props.newGardenPhotoURL} alt={props.newGardenName}/>
+                <div className="label">Photo URL:</div>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="newGardenPhotoURL"
+                    value={props.newGardenPhotoURL}
+                    onChange={props.updateFormField}
+                />
+            </div>
+
             <hr></hr>
             <div>
                 <div className="label">Aquascaper Name:</div>

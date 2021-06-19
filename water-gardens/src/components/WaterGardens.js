@@ -14,8 +14,9 @@ import PlantEditDetails from './PlantEditDetails';
 import GardenAddNew from './GardenAddNew';
 import GardenListing from './GardenListing';
 import GardenViewDetails from './GardenViewDetails';
+import GardenEditDetails from './GardenEditDetails';
 
-const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
+const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
 
 class WaterGardens extends React.Component {
     state = {
@@ -28,8 +29,11 @@ class WaterGardens extends React.Component {
         'plantBeingShown': 0,
         'editPlant': false,
         'plantIdBeingEdited' : 0,
+
         'showGarden': false,
         'gardenBeingShown': 0,
+        'editGarden': false,
+        'gardenIdBeingEdited' : 0,
 
         // to add new plant
         'newPlantName': "",
@@ -63,7 +67,25 @@ class WaterGardens extends React.Component {
 
         // to edit smartTags during Edit/Add Plant
         'editedPlantSmartTags' : [],
-        'toAddTag' : ""
+        'toAddTag' : "",
+
+        // to edit garden
+        'editedGardenName': "",
+        'editedGardenDesc': "",
+        'editedGardenCompletionDate': "",
+        'editedGardenWeeksToComplete': 0,
+        'editedGardenComplexityLevel': "",
+        'editedGardenAquascaperName': "",
+        'editedGardenAquascaperEmail': "", 
+        'editedGardenPlants': [],
+        'editedGardenRatings': [],
+        'editedGardenPhotoURL' : "",
+
+        // to add a plant to a garden
+        'allPlantsDropdown' : [],
+        'toAddGardenPlantId' : 0,
+        'toAddGardenPlantName' : "",
+        'toAddGardenPlantPhotoURL' : ""
     }
 
     // -----------------------------------------------
@@ -138,7 +160,7 @@ class WaterGardens extends React.Component {
             // modify the array in the state, reset state for edited fields
             let response = await axios.get(baseURL + "/plant/" + plantId);
             let modifiedPlant = response.data;
-            console.log("save successfully", modifiedPlant);
+            console.log("Plant save successfully", modifiedPlant);
 
             let indexToChange = this.state.plants.findIndex(p => p._id === plantId);
             let clonedArray = [
@@ -170,6 +192,7 @@ class WaterGardens extends React.Component {
         }
     }
 
+    // allow increasing plant likes without going Edit Details
     increasePlantLikesByOne = async (plantId) => {
         try {
             await axios.patch(baseURL + "/plant/" + plantId + "/likes/add_one")
@@ -197,6 +220,106 @@ class WaterGardens extends React.Component {
         }            
     }
 
+    // ------------------------
+    // Garden Edit Processing
+    // ------------------------
+    updateToAddGardenFields = (event) => {
+        let plantId = event.target.value
+        let wantedPlant = this.state.allPlantsDropdown.filter( p => p.id === plantId ? p : null)[0];
+         
+        this.setState({
+            'toAddGardenPlantId' : wantedPlant.id,
+            'toAddGardenPlantName' : wantedPlant.name,
+            'toAddGardenPlantPhotoURL' : wantedPlant.photoURL
+        })
+    }
+
+    addGardenPlant = () => {
+        let newGardenPlant = this.state.allPlantsDropdown.filter( p => p.id === this.state.toAddGardenPlantId ? p : null)[0];
+
+        let clonedArray = [...this.state.editedGardenPlants, newGardenPlant]
+        this.setState({
+            'editedGardenPlants' : clonedArray,
+            'toAddGardenPlantId' : 0,
+            'toAddGardenPlantName' : "",
+            'toAddGardenPlantPhotoURL' : ""
+        })
+    }
+
+    deleteGardenPlant = (plantId) => {
+        let indexToDelete = this.state.editedGardenPlants.findIndex( p => p.id === plantId);
+
+        let clonedArray = [
+            ...this.state.editedGardenPlants.slice(0, indexToDelete),
+            ...this.state.editedGardenPlants.slice(indexToDelete + 1)
+        ]
+        this.setState({
+            'editedGardenPlants' : clonedArray
+        })
+    }
+
+    saveEditedGarden = async (gardenId) => {
+        // save to database
+        try {
+            await axios.put(baseURL + "/garden/" + gardenId + "/edit", {
+                name : this.state.editedGardenName,
+                desc : this.state.editedGardenDesc,
+                completionDate : this.state.editedGardenCompletionDate,
+                weeksToComplete : this.state.editedGardenWeeksToComplete,
+                complexityLevel : this.state.editedGardenComplexityLevel,
+                aquascaper : {
+                    name: this.state.editedGardenAquascaperName,
+                    email: this.state.editedGardenAquascaperEmail
+                },
+                plants : this.state.editedGardenPlants,
+                ratings : this.state.editedGardenRatings,
+                photoURL : this.state.editedGardenPhotoURL
+            })
+
+            // modify the array in the state, reset state for edited fields
+            let response = await axios.get(baseURL + "/garden/" + gardenId);
+            let modifiedGarden = response.data;
+            console.log("Garden saved successfully", modifiedGarden);
+
+            let indexToChange = this.state.gardens.findIndex(g => g._id === gardenId);
+            let clonedArray = [
+                ...this.state.gardens.slice(0, indexToChange),
+                modifiedGarden,
+                ...this.state.gardens.slice(indexToChange + 1)
+            ];
+            this.setState({
+                gardens : clonedArray,
+
+                'gardenIdBeingEdited' : null,
+
+                'editedGardenName': "",
+                'editedGardenDesc': "",
+                'editedGardenCompletionDate': "",
+                'editedGardenWeeksToComplete': 0,
+                'editedGardenComplexityLevel': "",
+                'editedGardenAquascaperName': "",
+                'editedGardenAquascaperEmail': "", 
+                'editedGardenPlants': [],
+                'editedGardenRatings': [],
+                'editedGardenPhotoURL' : "",
+
+                'allPlantsDropdown': [],
+                'toAddGardenPlantId' : 0,
+                'toAddGardenPlantName' :"",
+                'toAddGardenPlantPhotoURL' : "",
+    
+                'editGarden': false,
+                'gardenBeingShown' : modifiedGarden,
+                'active': "garden-view" 
+            })
+
+        } catch(e) {
+            alert("Save edited plant failed. See console.");
+            console.log(e);
+        }
+    }
+
+
     //-----------------------------------------------------
     // Toggle between Listing All Plant or View One Plant
     //-----------------------------------------------------
@@ -220,8 +343,12 @@ class WaterGardens extends React.Component {
         });
     };
 
+    //-----------------------------------------------------
+    // Toggle between Listing View or Edit Plant
+    //-----------------------------------------------------
     showPlantEditDetails = () => {
         let editedPlant = {...this.state.plantBeingShown}
+
         this.setState({
             'plantIdBeingEdited' : editedPlant._id,
 
@@ -277,6 +404,72 @@ class WaterGardens extends React.Component {
             'active': "garden-listing"
         });
     };
+
+    //-----------------------------------------------------
+    // Toggle between Listing View or Edit Garden
+    //-----------------------------------------------------
+    showGardenEditDetails = () => {
+        let editedGarden = {...this.state.gardenBeingShown}
+
+        // setup list of all plants for editing plants in a garden
+        // this.state.allPlantsDropdown
+        let transformedPlants = this.state.plants.map(p => {
+            return {
+                'id' : p._id,
+                'name' : p.name,
+                'photoURL' : p.photoURL
+            }
+        })
+    
+        this.setState({
+            'gardenIdBeingEdited' : editedGarden._id,
+
+            'editedGardenName': editedGarden.name,
+            'editedGardenDesc': editedGarden.desc,
+            'editedGardenCompletionDate': editedGarden.completionDate,
+            'editedGardenWeeksToComplete': editedGarden.weeksToComplete,
+            'editedGardenComplexityLevel': editedGarden.complexityLevel,
+            'editedGardenAquascaperName': editedGarden.aquascaper.name,
+            'editedGardenAquascaperEmail': editedGarden.aquascaper.email, 
+            'editedGardenPlants': editedGarden.plants,
+            'editedGardenRatings': editedGarden.ratings,
+            'editedGardenPhotoURL' : editedGarden.photoURL,
+
+            'allPlantsDropdown' : transformedPlants,
+            'toAddGardenPlantId' : 0,
+            'toAddGardenPlantName' :"",
+            'toAddGardenPlantPhotoURL' : "",
+
+            'editGarden': true,
+            'active': "garden-edit"
+        })
+    }
+
+    hideGardenEditDetails = () => {
+        this.setState({
+            'gardenIdBeingEdited' : 0,
+
+            'editedGardenName': "",
+            'editedGardenDesc': "",
+            'editedGardenCompletionDate': "",
+            'editedGardenWeeksToComplete': 0,
+            'editedGardenComplexityLevel': "",
+            'editedGardenAquascaperName': "",
+            'editedGardenAquascaperEmail': "", 
+            'editedGardenPlants': [],
+            'editedGardenRatings': [],
+            'editedGardenPhotoURL' : "",
+
+            'allPlantsDropdown' : [],
+            'toAddGardenPlantId' : 0,
+            'toAddGardenPlantName' :"",
+            'toAddGardenPlantPhotoURL' : "",
+
+            'editGarden': false,
+            'active': "garden-view" 
+        });
+    }
+
     //-----------------------------------------------------
     // Handles Add New document for both plant and garden
     //-----------------------------------------------------
@@ -454,13 +647,52 @@ class WaterGardens extends React.Component {
                     <Home setActive={this.setActive}/>
                 </React.Fragment>
             );
+        } else if (this.state.active === 'garden-edit') {
+            return (
+                <React.Fragment>
+                    <GardenEditDetails 
+                        gardenIdBeingEdited={this.state.gardenIdBeingEdited}
+
+                        editedGardenName={this.state.editedGardenName}
+                        editedGardenDesc={this.state.editedGardenDesc}
+                        editedGardenCompletionDate={this.state.editedGardenCompletionDate}
+                        editedGardenWeeksToComplete={this.state.editedGardenWeeksToComplete}
+                        editedGardenComplexityLevel={this.state.editedGardenComplexityLevel}
+                        editedGardenAquascaperName={this.state.editedGardenAquascaperName}
+                        editedGardenAquascaperEmail={this.state.editedGardenAquascaperEmail}
+                        editedGardenPhotoURL={this.state.editedGardenPhotoURL}
+                        
+                        editedGardenPlants={this.state.editedGardenPlants}
+                        allPlantsDropdown={this.state.allPlantsDropdown}
+                        toAddGardenPlantId={this.state.toAddGardenPlantId}
+                        toAddGardenPlantName={this.state.toAddGardenPlantName}
+                        toAddGardenPlantPhotoURL={this.state.toAddGardenPlantPhotoURL}
+                        updateToAddGardenFields={this.updateToAddGardenFields}
+                        addGardenPlant={this.addGardenPlant}
+                        deleteGardenPlant={this.deleteGardenPlant}
+
+                        updateFormField={this.updateFormField}
+                        saveEditedGarden={this.saveEditedGarden}
+                        hideGardenEditDetails={this.hideGardenEditDetails}
+                    />
+                </React.Fragment>
+            );
+        
         } else if (this.state.active === 'garden-view') {
             return (
                 <React.Fragment>
                     <GardenViewDetails 
                         garden={this.state.gardenBeingShown} 
+
+                        editedGardenRatings={this.state.editedGardenRatings}
+                        toAddRatingLevel={this.state.toAddRatingLevel}
+                        toAddRatingComment={this.state.toAddRatingComment}
+                        addRatingLevel={this.addRating}
+                        deleteRating={this.deleteRating}
+
                         displayDeletePopup={this.displayDeletePopup}
                         hideGardenDetails={this.hideGardenDetails}
+                        showGardenEditDetails={this.showGardenEditDetails}
                     />
                 </React.Fragment>
             );
@@ -584,7 +816,7 @@ class WaterGardens extends React.Component {
                             >Gardens
                             </button>
                         </li>
-                        <li className={this.state.showGarden ? "nav-item" : "nav-item d-none"}>
+                        <li className={this.state.showGarden && !this.state.editGarden ? "nav-item" : "nav-item d-none"}>
                             <button 
                                 className={this.state.active==="garden-view" ? "nav-link active" : "nav-link"}
                                 aria-current={this.state.active==="garden-view" ? "page" : "false"} 
@@ -592,6 +824,16 @@ class WaterGardens extends React.Component {
                                     this.setActive("garden-view");
                                 }}
                             >View Garden
+                            </button>
+                        </li>
+                        <li className={this.state.editGarden ? "nav-item" : "nav-item d-none"}>
+                            <button 
+                                className={this.state.active==="garden-edit" ? "nav-link active" : "nav-link"}
+                                aria-current={this.state.active==="garden-edit" ? "page" : "false"} 
+                                onClick={() => {
+                                    this.setActive("garden-edit");
+                                }}
+                            >Edit Garden
                             </button>
                         </li>
                         <li className={this.state.showPlant ? "nav-item d-none" : "nav-item"}>

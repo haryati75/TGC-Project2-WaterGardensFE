@@ -90,7 +90,9 @@ function PlantAddNew(props) {
                 <div className="label">Lighting:</div>
                 {renderLightingLevels(props)}
             </div>
-            <div>
+
+            <div className="card">
+                <img className="card-img-top" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
                 <div className="label">Photo URL:</div>
                 <input
                     type="text"

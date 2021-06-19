@@ -4,16 +4,18 @@ function GardenListing(props) {
     return (
         <React.Fragment>
             <h1>Gardens Listing</h1>
+            <div className="row">
             {props.gardens.map( g => 
                 <React.Fragment key={g._id}>
-                    <div className="card">
+                    <div className="card" style={{width: "30rem"}}>
                         <div className="card-body">
+                            <img className="card-img-top" src={g.photoURL} alt={g.name}/>
                             <h3 className="card-title">
                                 {g.name}
                             </h3>
-                            <h5>Description: {g.desc}</h5>
+                            <p className="card-text">{g.desc}</p>
                             <h5>Aquascaper: {g.aquascaper.name}</h5>
-                            <p>Contact: {g.aquascaper.email}</p>
+                            <p>Website: {g.aquascaper.email}</p>
                             <p>Plants:</p>
                             <ul>
                                 {Array.isArray(g.plants) ? g.plants.map(p => <li key={p.id}>{p.name}</li>) : null}
@@ -38,6 +40,7 @@ function GardenListing(props) {
                     </div>
                 </React.Fragment>
             )}
+            </div>
         </React.Fragment>
     );
 }

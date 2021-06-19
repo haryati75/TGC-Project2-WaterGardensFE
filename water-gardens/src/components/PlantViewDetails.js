@@ -11,8 +11,8 @@ function PlantViewDetails(props) {
                     <p className="card-text">Ease of Care: {props.plant.care}</p>
                     <p className="card-text">Lighting: {props.plant.lighting}</p>
                     <p className="card-text">Appearance: {props.plant.appearance}</p>
-                    <p className="card-text">Likes: {props.plant.likes}</p>
-                    <p className="card-text">Keywords:</p>
+
+                    { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? <p className="card-text">Keywords:</p> : null }
                     <ul>
                         {Array.isArray(props.plant.smartTags) ? props.plant.smartTags.map(t => <li key={t}>{t}</li>) : null}
                     </ul>
@@ -25,7 +25,8 @@ function PlantViewDetails(props) {
                     props.plant.likes++;
                     props.increasePlantLikesByOne(props.plant._id);
                 }}
-            >Increase Likes</button>
+            ><i class="fas fa-thumbs-up"></i> Likes: {props.plant.likes}</button>
+
             <button
                 className="btn btn-primary me-3"
                 onClick={props.showPlantEditDetails}
@@ -39,7 +40,7 @@ function PlantViewDetails(props) {
             <button
                 className="btn btn-success me-3"
                 onClick={props.hidePlantDetails}
-            >Go back to Listing</button>
+            >Go back <i class="fas fa-th-list"></i></button>
         </React.Fragment>
     )
 }
