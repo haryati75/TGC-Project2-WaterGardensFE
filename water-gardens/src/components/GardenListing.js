@@ -30,12 +30,6 @@ function GardenListing(props) {
                                     props.viewGardenDetails(g._id);
                                 }}
                             >View Garden</button>
-                            {/* <button
-                                className="btn btn-secondary me-3"
-                                onClick={() => {
-                                    props.displayDeletePopup(g._id, "garden");
-                                }}
-                            >Delete Garden</button> */}
                         </div>
                     </div>
                 </React.Fragment>

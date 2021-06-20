@@ -18,7 +18,7 @@ function GardenViewDetails(props) {
 
     return (
         <React.Fragment>
-            <div className="card" style={{width : "80%"}}>
+            <div className="card mt-3" style={{width : "80%"}}>
 
                 <img className="card-img-bottom" src={props.garden.photoURL} alt={props.garden.name}/>
                 <div className="card-body">
@@ -41,7 +41,7 @@ function GardenViewDetails(props) {
             <div className="row">
                 <h6>Ratings:</h6>
                 <ul>
-                    {Array.isArray(props.garden.ratings) ? props.garden.ratings.map(r => <li key={r._id}>{r.rating} - {r.comments}</li>) : null}
+                    {Array.isArray(props.garden.ratings) ? props.garden.ratings.map(r => <li key={r._id}>{r.level} - {r.comments}</li>) : null}
                 </ul>
             </div>
             <button

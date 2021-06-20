@@ -23,6 +23,7 @@ class WaterGardens extends React.Component {
         'plants': [],
         'gardens': [],
         'active': 'home',
+        'homeSelectedListing' : "",
 
         // Toggle between Listing All or View Detail of One
         'showPlant': false,
@@ -85,7 +86,14 @@ class WaterGardens extends React.Component {
         'allPlantsDropdown' : [],
         'toAddGardenPlantId' : 0,
         'toAddGardenPlantName' : "",
-        'toAddGardenPlantPhotoURL' : ""
+        'toAddGardenPlantPhotoURL' : "",
+
+        // home highlights: top garden/plants
+        'topGardens' : [],
+        'topPlants' : [],
+
+        // refresh datetimestamp
+        'refreshedOn' : null
     }
 
     // -----------------------------------------------
@@ -99,9 +107,18 @@ class WaterGardens extends React.Component {
     async componentDidMount() {
         let plantsData = await this.fetchData("/plants");
         let gardensData = await this.fetchData("/gardens");
+        let topPlantsData = await this.fetchData("/plants/top");
+        let topGardensData = await this.fetchData("/gardens/top");
+        let now = new Date()
+        let nowDate = now.getDate() + "-" + (now.getMonth()+1) + "-" + now.getFullYear()
+        let nowTime = now.toLocaleTimeString()
+
         this.setState({
             'plants': plantsData,
-            'gardens': gardensData
+            'gardens': gardensData,
+            'topPlants' : topPlantsData,
+            'topGardens' : topGardensData,
+            'refreshedOn' : nowDate + " " + nowTime
         })
     }
 
@@ -118,6 +135,10 @@ class WaterGardens extends React.Component {
         this.setState({
             [event.target.name] : event.target.value
         })
+    }
+
+    refreshAllData = () => {
+        this.componentDidMount();
     }
 
     // ------------------------
@@ -225,13 +246,22 @@ class WaterGardens extends React.Component {
     // ------------------------
     updateToAddGardenFields = (event) => {
         let plantId = event.target.value
-        let wantedPlant = this.state.allPlantsDropdown.filter( p => p.id === plantId ? p : null)[0];
+        if (plantId !== "") {
+            let wantedPlant = this.state.allPlantsDropdown.filter( p => p.id === plantId ? p : null)[0];
          
-        this.setState({
-            'toAddGardenPlantId' : wantedPlant.id,
-            'toAddGardenPlantName' : wantedPlant.name,
-            'toAddGardenPlantPhotoURL' : wantedPlant.photoURL
-        })
+            this.setState({
+                'toAddGardenPlantId' : wantedPlant.id,
+                'toAddGardenPlantName' : wantedPlant.name,
+                'toAddGardenPlantPhotoURL' : wantedPlant.photoURL
+            })
+        } else {
+            this.setState({
+                'toAddGardenPlantId' : 0,
+                'toAddGardenPlantName' : "",
+                'toAddGardenPlantPhotoURL' : ""
+            })
+        }
+
     }
 
     addGardenPlant = () => {
@@ -584,29 +614,45 @@ class WaterGardens extends React.Component {
     };
 
     deletePlant = async (plantId) => {
-        // delete from database via API
-        try {
-            let response = await axios.delete(baseURL + "/plant/" + plantId);
+        // Validate that plant is not used by any garden (using current data)
+        let canDelete = true;
 
-            // delete from array in state
-            let toDeleteIdx = this.state.plants.findIndex(p => p._id === plantId);
-            let modifiedPlants = [
-                ...this.state.plants.slice(0, toDeleteIdx),
-                ...this.state.plants.slice(toDeleteIdx + 1)
-            ];
-    
-            // return backk to listing and reset all delete states
-            this.setState({
-                'plants': modifiedPlants,
-                'active': 'plant-listing',
-                'deleteWhat' : "",
-                'deleteId' : null,
-                'showDeletePopup' : false
-            });
+        for (let g of this.state.gardens) {
+            if (g.plants.length > 0) {
+                if (g.plants.findIndex(p => p.id === plantId) !== -1) {
+                    canDelete = false;
+                    break
+                }
+            }
+        }
 
-        } catch(e) {
-            alert("Deletion of plant record failed. See console.")
-            console.log(e)
+        if (canDelete) {
+            // delete from database via API
+            try {
+                let response = await axios.delete(baseURL + "/plant/" + plantId);
+
+                // delete from array in state
+                let toDeleteIdx = this.state.plants.findIndex(p => p._id === plantId);
+                let modifiedPlants = [
+                    ...this.state.plants.slice(0, toDeleteIdx),
+                    ...this.state.plants.slice(toDeleteIdx + 1)
+                ];
+        
+                // return backk to listing and reset all delete states
+                this.setState({
+                    'plants': modifiedPlants,
+                    'active': 'plant-listing',
+                    'deleteWhat' : "",
+                    'deleteId' : null,
+                    'showDeletePopup' : false
+                });
+
+            } catch(e) {
+                alert("Deletion of plant record failed. See console.")
+                console.log(e)
+            }
+        } else {
+            alert("Plant is in other garden(s). Unable to delete this plant.")
         }
     }
 
@@ -637,6 +683,7 @@ class WaterGardens extends React.Component {
         }
     }
 
+    // setActive={this.setActive}
     //------------------------------------------------------------
     // Manage the navigation between components and passing props
     //------------------------------------------------------------
@@ -644,7 +691,15 @@ class WaterGardens extends React.Component {
         if (this.state.active === 'home') {
             return (
                 <React.Fragment>
-                    <Home setActive={this.setActive}/>
+                    <Home 
+                        homeSelectedListing={this.state.homeSelectedListing}
+                        topPlants={this.state.topPlants}
+                        topGardens={this.state.topGardens}
+                        updateFormField={this.updateFormField}
+                        viewGardenDetails={this.viewGardenDetails}
+                        viewPlantDetails={this.viewPlantDetails}
+                        increasePlantLikesByOne={this.increasePlantLikesByOne}
+                    />
                 </React.Fragment>
             );
         } else if (this.state.active === 'garden-edit') {
@@ -890,7 +945,10 @@ class WaterGardens extends React.Component {
                     {this.renderContent()}
                     {this.renderDeletePopup()}
                 </div>
-                <Footer />
+                <Footer 
+                    refreshAllData={this.refreshAllData} 
+                    refreshedOn={this.state.refreshedOn}
+                />
             </React.Fragment>
         );
     }

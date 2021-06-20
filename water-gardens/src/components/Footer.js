@@ -1,10 +1,15 @@
 import React from 'react';
 import logo from './water-gardens-logo-small.png';
 
-function Footer() {
+function Footer(props) {
     return (
         <React.Fragment>
             <footer className="container-fluid mt-5">
+                <div className="row">
+                    <button className="btn btn-info" onClick={props.refreshAllData}
+                        >Click here to refresh listings (Last Refreshed: {props.refreshedOn})
+                    </button>
+                </div>
                 <div className="row">
                     <div className="col-3 p-3">
                         <img src={logo} alt="Logo"/>

@@ -33,13 +33,15 @@ function renderGardenPlants(plants, deleteGardenPlant) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card" style={{width : "18rem"}}>
+            <div className="card mx-3" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                <h6 className="card-subtitle">{p.name}</h6>
-                <button className="btn btn-danger btn-sm ms-3"
-                        onClick={() => { deleteGardenPlant(p.id); }}
-                    ><i className="far fa-trash-alt"></i>
-                </button>
+                <div cardName="card-body">
+                    <h6 className="card-subtitle mx-auto">{p.name} 
+                        <button className="btn btn-danger btn-sm ms-3"
+                                onClick={() => { deleteGardenPlant(p.id); }}
+                            ><i className="far fa-trash-alt"></i>
+                    </button></h6>
+                </div>
             </div>
         </React.Fragment>)
         plantsJSX.push(e);
@@ -72,7 +74,7 @@ function GardenEditDetails (props) {
     return (
         <React.Fragment>
             <h1>Edit Garden Details</h1>
-
+            <hr></hr>
             <div>
                 <div className="label">Name of Garden</div>
                 <input
@@ -140,7 +142,7 @@ function GardenEditDetails (props) {
             </div>
 
             <div className="card">
-                <img className="card-img-top" src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
+                <img className="card-img p-3" src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
                 <div className="label">Photo URL:</div>
                 <input
                     type="text"
@@ -151,18 +153,20 @@ function GardenEditDetails (props) {
                 />
             </div>
             <hr></hr>
-            <div className="row">
-                {props.editedGardenPlants.length > 0 ? <h6>Plants found in this Garden:</h6> : null}
-                {renderGardenPlants(props.editedGardenPlants, props.deleteGardenPlant)}
+            <div className="card">
+                <div className="row">
+                    {props.editedGardenPlants.length > 0 ? <h6>Plants found in this Garden:</h6> : null}
+                    {renderGardenPlants(props.editedGardenPlants, props.deleteGardenPlant)}
+                </div>
             </div>
 
-            <div className="card">
+            <div className="card my-auto" style={{width : "18rem"}}>
                 {renderAddGardenPlantsDropdown(props)}
+                <img className="card-img-top mt-3" src={props.toAddGardenPlantPhotoURL} alt={props.toAddGardenPlantName}/>
                 <button
                     className="btn btn-info me-3"
                     onClick={props.addGardenPlant}
-                >Add Plant to Garden</button>
-                <img className="card-img-top" src={props.toAddGardenPlantPhotoURL} alt={props.toAddGardenPlantName}/>
+                >Add Plant to Garden</button>                
             </div>
             <hr></hr>
             <button
