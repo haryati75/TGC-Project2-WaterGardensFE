@@ -41,7 +41,7 @@ function GardenViewDetails(props) {
             <div className="row">
                 <h6>Ratings:</h6>
                 <ul>
-                    {Array.isArray(props.garden.ratings) ? props.garden.ratings.map(r => <li key={r._id}>{r.level} - {r.comments}</li>) : null}
+                    {Array.isArray(props.garden.ratings) ? props.garden.ratings.map(r => <li key={r._id}>{r.level} - {r.comment}</li>) : null}
                 </ul>
             </div>
             <button

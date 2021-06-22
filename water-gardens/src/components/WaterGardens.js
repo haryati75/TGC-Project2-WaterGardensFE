@@ -16,7 +16,7 @@ import GardenListing from './GardenListing';
 import GardenViewDetails from './GardenViewDetails';
 import GardenEditDetails from './GardenEditDetails';
 
-const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
+const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
 
 class WaterGardens extends React.Component {
     state = {
@@ -30,6 +30,7 @@ class WaterGardens extends React.Component {
         'plantBeingShown': 0,
         'editPlant': false,
         'plantIdBeingEdited' : 0,
+        'allowPlantDelete': false,
 
         'showGarden': false,
         'gardenBeingShown': 0,
@@ -264,6 +265,7 @@ class WaterGardens extends React.Component {
 
     }
 
+    // adding sub-document with referential integrity (i.e. plant must exist before adding to garden)
     addGardenPlant = () => {
         let newGardenPlant = this.state.allPlantsDropdown.filter( p => p.id === this.state.toAddGardenPlantId ? p : null)[0];
 
@@ -353,6 +355,20 @@ class WaterGardens extends React.Component {
     //-----------------------------------------------------
     // Toggle between Listing All Plant or View One Plant
     //-----------------------------------------------------
+    // to help check if a Plant exist in another Garden before it can be deleted
+    canDelete = (plantId) => {
+        let deleteFlag = true;
+        for (let g of this.state.gardens) {
+            if (g.plants.length > 0) {
+                if (g.plants.findIndex(p => p.id === plantId) !== -1) {
+                    deleteFlag = false;
+                    break
+                }
+            }
+        }
+        return deleteFlag;
+    }
+
     viewPlantDetails = async (plantId) => {
         // get the plant being viewed from API
         let response = await axios.get(baseURL + "/plant/" + plantId);
@@ -360,6 +376,7 @@ class WaterGardens extends React.Component {
         this.setState({
             'showPlant': true,
             'plantBeingShown': response.data,
+            'allowPlantDelete': this.canDelete(plantId),
             'active': "plant-view"
         })
     }
@@ -614,52 +631,36 @@ class WaterGardens extends React.Component {
     };
 
     deletePlant = async (plantId) => {
-        // Validate that plant is not used by any garden (using current data)
-        let canDelete = true;
+        // delete from database via API
+        try {
+            await axios.delete(baseURL + "/plant/" + plantId);
 
-        for (let g of this.state.gardens) {
-            if (g.plants.length > 0) {
-                if (g.plants.findIndex(p => p.id === plantId) !== -1) {
-                    canDelete = false;
-                    break
-                }
-            }
-        }
+            // delete from array in state
+            let toDeleteIdx = this.state.plants.findIndex(p => p._id === plantId);
+            let modifiedPlants = [
+                ...this.state.plants.slice(0, toDeleteIdx),
+                ...this.state.plants.slice(toDeleteIdx + 1)
+            ];
+    
+            // return backk to listing and reset all delete states
+            this.setState({
+                'plants': modifiedPlants,
+                'active': 'plant-listing',
+                'deleteWhat' : "",
+                'deleteId' : null,
+                'showDeletePopup' : false
+            });
 
-        if (canDelete) {
-            // delete from database via API
-            try {
-                let response = await axios.delete(baseURL + "/plant/" + plantId);
-
-                // delete from array in state
-                let toDeleteIdx = this.state.plants.findIndex(p => p._id === plantId);
-                let modifiedPlants = [
-                    ...this.state.plants.slice(0, toDeleteIdx),
-                    ...this.state.plants.slice(toDeleteIdx + 1)
-                ];
-        
-                // return backk to listing and reset all delete states
-                this.setState({
-                    'plants': modifiedPlants,
-                    'active': 'plant-listing',
-                    'deleteWhat' : "",
-                    'deleteId' : null,
-                    'showDeletePopup' : false
-                });
-
-            } catch(e) {
-                alert("Deletion of plant record failed. See console.")
-                console.log(e)
-            }
-        } else {
-            alert("Plant is in other garden(s). Unable to delete this plant.")
+        } catch(e) {
+            alert("Deletion of plant record failed. See console.")
+            console.log(e)
         }
     }
 
     deleteGarden = async (gardenId) => {
         // delete from database via API
         try {
-            let response = await axios.delete(baseURL + "/garden/" + gardenId);
+            await axios.delete(baseURL + "/garden/" + gardenId);
 
             // delete from array in state
             let toDeleteIdx = this.state.gardens.findIndex(g => g._id === gardenId);
@@ -791,6 +792,7 @@ class WaterGardens extends React.Component {
                     <PlantViewDetails 
                         plant={this.state.plantBeingShown} 
                         increasePlantLikesByOne={this.increasePlantLikesByOne}
+                        allowPlantDelete={this.state.allowPlantDelete}
                         displayDeletePopup={this.displayDeletePopup}
                         hidePlantDetails={this.hidePlantDetails}
                         showPlantEditDetails={this.showPlantEditDetails}

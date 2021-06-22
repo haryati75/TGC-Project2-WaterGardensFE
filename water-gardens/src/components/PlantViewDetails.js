@@ -33,6 +33,7 @@ function PlantViewDetails(props) {
             >Edit Plant</button>
             <button
                 className="btn btn-danger me-3"
+                disabled={!props.allowPlantDelete}
                 onClick={() => {
                     props.displayDeletePopup(props.plant._id, "plant");
                 }}

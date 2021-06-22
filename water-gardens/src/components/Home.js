@@ -48,8 +48,12 @@ function Home(props) {
                             <h3 className="card-title">
                                 {g.name}
                             </h3>
-                            <h5 className="card-subtitle">Aquascaper: {g.aquascaper.name}</h5>
+                            <h5 className="card-subtitle text-muted">Aquascaper: {g.aquascaper.name}</h5>
                             <p>Complexity: {g.complexityLevel}</p>
+                            <h6>Ratings & Comments:</h6>
+                            <ul>
+                                {Array.isArray(g.ratings) ? g.ratings.map(r => <li key={r._id}>{r.level} - {r.comment}</li>) : null}
+                            </ul>
                             {/* <button
                                 className="btn btn-info me-3"
                                 onClick={props.addRatings}
@@ -76,10 +80,9 @@ function Home(props) {
                         <div className="card-body">
                             <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                             <h5 className="card-title">{p.name}</h5>
-                            <p>Ease of Care: {p.care}</p>
-                            <p>Lighting: {p.lighting}</p>
+                            <p class="card-text">Ease of Care: {p.care}, Lighting: {p.lighting}</p>
                             <button
-                                className="btn btn-info me-3"
+                                className="btn btn-info me-3" disabled={true}
                                 onClick={() => {
                                     props.increasePlantLikesByOne(p._id);
                                 }}
