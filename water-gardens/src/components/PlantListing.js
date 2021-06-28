@@ -17,7 +17,7 @@ function PlantListing(props) {
                                 onClick={() => {
                                     props.increasePlantLikesByOne(p._id);
                                 }}
-                            ><i class="fas fa-thumbs-up"></i> Likes: {p.likes}</button>
+                            ><i className="fas fa-thumbs-up"></i> Likes: {p.likes}</button>
 
                             <button
                                 className="btn btn-success me-3"

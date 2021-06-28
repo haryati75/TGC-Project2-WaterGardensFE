@@ -20,7 +20,7 @@ function PlantViewDetails(props) {
             </div>
             <hr></hr>
             <button
-                className="btn btn-info me-3"
+                className="btn btn-info me-3 mt-2"
                 onClick={() => {
                     props.plant.likes++;
                     props.increasePlantLikesByOne(props.plant._id);
@@ -39,7 +39,7 @@ function PlantViewDetails(props) {
                 }}
             >Delete Plant</button>
             <button
-                className="btn btn-success me-3"
+                className="btn btn-dark me-3"
                 onClick={props.hidePlantDetails}
             >Go back <i class="fas fa-th-list"></i></button>
         </React.Fragment>

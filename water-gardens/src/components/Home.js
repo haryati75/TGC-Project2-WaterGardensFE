@@ -29,6 +29,30 @@ function renderHighlightsList(props) {
     )
 }
 
+function renderRatingIcons(n) {
+    let iconsJSX = [];
+    for (let i=0; i < n; i++) {
+        let e = (<React.Fragment key={i}>
+                <i class="fas fa-leaf"></i>
+            </React.Fragment>)
+        iconsJSX.push(e);
+    }
+    return iconsJSX;
+}
+
+function renderGardenRatings(ratings) {
+    let ratingsJSX = [];
+    for (let r of ratings) {
+        let e = (<React.Fragment key={r.id}>
+            <li>
+            {renderRatingIcons(r.level)} - {r.comment}
+            </li>
+            </React.Fragment>)
+        ratingsJSX.push(e);
+    }
+    return ratingsJSX;
+}
+
 // This is the Home page which is called "Highlights" in the Tabs
 function Home(props) {
     return (
@@ -50,20 +74,16 @@ function Home(props) {
                             </h3>
                             <h5 className="card-subtitle text-muted">Aquascaper: {g.aquascaper.name}</h5>
                             <p>Complexity: {g.complexityLevel}</p>
-                            <h6>Ratings & Comments:</h6>
+                            <h6>Ratings and Comments:</h6>
                             <ul>
-                                {Array.isArray(g.ratings) ? g.ratings.map(r => <li key={r._id}>{r.level} - {r.comment}</li>) : null}
+                                {renderGardenRatings(g.ratings)}
                             </ul>
-                            {/* <button
-                                className="btn btn-info me-3"
-                                onClick={props.addRatings}
-                            >Rate this Garden</button> */}
                             <button
                                 className="btn btn-success me-3"
                                 onClick={()=>{
                                     props.viewGardenDetails(g._id);
                                 }}
-                            >View Garden</button>
+                            >View and Rate this Garden</button>
                         </div>
                     </div>
                 </React.Fragment>
@@ -80,13 +100,13 @@ function Home(props) {
                         <div className="card-body">
                             <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                             <h5 className="card-title">{p.name}</h5>
-                            <p class="card-text">Ease of Care: {p.care}, Lighting: {p.lighting}</p>
+                            <p className="card-text">Ease of Care: {p.care}, Lighting: {p.lighting}</p>
                             <button
-                                className="btn btn-info me-3" disabled={true}
+                                className="btn btn-light me-3" disabled={true}
                                 onClick={() => {
                                     props.increasePlantLikesByOne(p._id);
                                 }}
-                            ><i class="fas fa-thumbs-up"></i> Likes: {p.likes}</button>
+                            ><i className="fas fa-thumbs-up"></i> Likes: {p.likes}</button>
 
                             <button
                                 className="btn btn-success me-3"

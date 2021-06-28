@@ -1,5 +1,35 @@
 import React from 'react';
 
+const ratingLevels = [
+    {key: "5", label: "star1"}, 
+    {key: "4", label: "star2"},
+    {key: "3", label: "star3"},
+    {key: "2", label: "star4"},
+    {key: "1", label: "star5"}
+]
+
+function renderRatingLevels (props) {
+    // Ratings via fontawesom icons in CSS
+    let ratingsJSX = [];
+
+    for (let r of ratingLevels) {
+        let e = (<React.Fragment key={r.key}>
+            <input
+                type="radio"
+                id={r.label}
+                name="toAddGardenRatingLevel"
+                value={r.key}
+                checked={ props.toAddGardenRatingLevel === r.key }
+                onChange={props.updateFormField}
+            />
+            <label htmlFor={r.label}></label>
+        </React.Fragment>)
+        ratingsJSX.push(e);
+    }
+
+    return ratingsJSX;
+}
+
 function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
@@ -12,6 +42,33 @@ function renderGardenPlants(plants) {
         plantsJSX.push(e);
     }
     return plantsJSX;
+}
+
+function renderRatingIcons(n) {
+    let iconsJSX = [];
+    for (let i=0; i < n; i++) {
+        let e = (<React.Fragment key={i}>
+                <i class="fas fa-leaf"></i>
+            </React.Fragment>)
+        iconsJSX.push(e);
+    }
+    return iconsJSX;
+}
+
+function renderGardenRatings(gardenId, ratings, deleteGardenRating) {
+    let ratingsJSX = [];
+    for (let r of ratings) {
+        let e = (<React.Fragment key={r.id}>
+            <li>
+                {renderRatingIcons(r.level)} - {r.comment}
+                <button className="btn btn-sm"
+                    onClick={() => { deleteGardenRating(gardenId, r.id); }}
+                ><i className="far fa-trash-alt" style={{color: "red"}}></i></button>
+            </li>
+            </React.Fragment>)
+        ratingsJSX.push(e);
+    }
+    return ratingsJSX;
 }
 
 function GardenViewDetails(props) {
@@ -39,15 +96,41 @@ function GardenViewDetails(props) {
 
             <hr></hr>
             <div className="row">
-                <h6>Ratings:</h6>
-                <ul>
-                    {Array.isArray(props.garden.ratings) ? props.garden.ratings.map(r => <li key={r._id}>{r.level} - {r.comment}</li>) : null}
-                </ul>
+                <h6>Ratings and Comments:</h6>
+                <div>
+                    <ul>
+                        {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating)}
+                    </ul>
+                </div>
             </div>
+
+
+            <div className="row">
+                <div className="label">Rate Me: </div>
+                <div className="container">
+                    <div className="starrating d-flex justify-content-end flex-row-reverse">
+                        {renderRatingLevels(props)}
+                    </div>
+                </div> 
+            </div>
+
+            <div>
+                <div className="label">Comments: </div>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="toAddGardenRatingComment"
+                    value={props.toAddGardenRatingComment}
+                    onChange={props.updateFormField}
+                />
+            </div>
+
             <button
-                    className="btn btn-info me-3"
-                    onClick={props.addRating}
-                >Rate this Garden</button>
+                    className="btn btn-success me-3 mt-3"
+                    onClick={() => { props.addGardenRating(props.garden._id)}}
+                >Submit your rating and comments
+            </button>
+
             <hr></hr>
 
             <button
@@ -61,7 +144,7 @@ function GardenViewDetails(props) {
                 }}
             >Delete Garden</button>
             <button
-                className="btn btn-success me-3"
+                className="btn btn-dark me-3"
                 onClick={props.hideGardenDetails}
             >Go back <i className="fas fa-th-list"></i></button>
         </React.Fragment>

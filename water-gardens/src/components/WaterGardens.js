@@ -17,6 +17,7 @@ import GardenViewDetails from './GardenViewDetails';
 import GardenEditDetails from './GardenEditDetails';
 
 const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
+//const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
 
 class WaterGardens extends React.Component {
     state = {
@@ -88,6 +89,10 @@ class WaterGardens extends React.Component {
         'toAddGardenPlantId' : 0,
         'toAddGardenPlantName' : "",
         'toAddGardenPlantPhotoURL' : "",
+
+        // to add a rating to a garden
+        'toAddGardenRatingLevel' : 0,
+        'toAddGardenRatingComment' : "",
 
         // home highlights: top garden/plants
         'topGardens' : [],
@@ -245,7 +250,7 @@ class WaterGardens extends React.Component {
     // ------------------------
     // Garden Edit Processing
     // ------------------------
-    updateToAddGardenFields = (event) => {
+    updateToAddGardenPlantFields = (event) => {
         let plantId = event.target.value
         if (plantId !== "") {
             let wantedPlant = this.state.allPlantsDropdown.filter( p => p.id === plantId ? p : null)[0];
@@ -262,7 +267,66 @@ class WaterGardens extends React.Component {
                 'toAddGardenPlantPhotoURL' : ""
             })
         }
+    }
 
+    addGardenRating = async (gardenId) => {
+        // call API to insert directly to update in db
+        try {
+            let response = await axios.patch(baseURL + "/garden/" + gardenId + "/rating/add", {
+                'newRatingLevel' : parseInt(this.state.toAddGardenRatingLevel),
+                'newRatingComment' : this.state.toAddGardenRatingComment
+            })
+
+            // update the garden in the gardens array
+            let clonedGarden = response.data;
+            
+            let indexToChange = this.state.gardens.findIndex( g => g._id === gardenId );
+            let clonedGardensArray = [
+                ...this.state.gardens.slice(0, indexToChange),
+                clonedGarden,
+                ...this.state.gardens.slice(indexToChange + 1)
+            ];
+
+            this.setState({
+                gardenBeingShown : clonedGarden,
+                gardens : clonedGardensArray,
+                'toAddGardenRatingLevel' : 0,
+                'toAddGardenRatingComment' : ""
+            })
+
+        } catch (e) {
+            alert("Add Garden Rating failed. See console.")
+            console.log(e)
+        }     
+
+    }
+
+    deleteGardenRating = async (gardenId, ratingId) => {
+
+        // call API to insert directly to update in db
+        try {
+            let response = await axios.patch(baseURL + "/garden/" + gardenId + "/rating/" + ratingId + "/delete");
+
+            // update the garden in the gardens array
+            let clonedGarden = response.data;
+            
+            let indexToChange = this.state.gardens.findIndex( g => g._id === gardenId );
+            let clonedGardensArray = [
+                ...this.state.gardens.slice(0, indexToChange),
+                clonedGarden,
+                ...this.state.gardens.slice(indexToChange + 1)
+            ];
+
+            this.setState({
+                gardenBeingShown : clonedGarden,
+                gardens : clonedGardensArray
+            })
+
+        } catch (e) {
+            alert("Delete Garden Rating failed. See console.")
+            console.log(e)
+        }   
+    
     }
 
     // adding sub-document with referential integrity (i.e. plant must exist before adding to garden)
@@ -684,7 +748,6 @@ class WaterGardens extends React.Component {
         }
     }
 
-    // setActive={this.setActive}
     //------------------------------------------------------------
     // Manage the navigation between components and passing props
     //------------------------------------------------------------
@@ -723,7 +786,7 @@ class WaterGardens extends React.Component {
                         toAddGardenPlantId={this.state.toAddGardenPlantId}
                         toAddGardenPlantName={this.state.toAddGardenPlantName}
                         toAddGardenPlantPhotoURL={this.state.toAddGardenPlantPhotoURL}
-                        updateToAddGardenFields={this.updateToAddGardenFields}
+                        updateToAddGardenPlantFields={this.updateToAddGardenPlantFields}
                         addGardenPlant={this.addGardenPlant}
                         deleteGardenPlant={this.deleteGardenPlant}
 
@@ -740,11 +803,12 @@ class WaterGardens extends React.Component {
                     <GardenViewDetails 
                         garden={this.state.gardenBeingShown} 
 
-                        editedGardenRatings={this.state.editedGardenRatings}
-                        toAddRatingLevel={this.state.toAddRatingLevel}
-                        toAddRatingComment={this.state.toAddRatingComment}
-                        addRatingLevel={this.addRating}
-                        deleteRating={this.deleteRating}
+                        toAddGardenRatingLevel={this.state.toAddGardenRatingLevel}
+                        toAddGardenRatingComment={this.state.toAddGardenRatingComment}
+                        updateFormField={this.updateFormField}
+                        addGardenRating={this.addGardenRating}
+
+                        deleteGardenRating={this.deleteGardenRating}
 
                         displayDeletePopup={this.displayDeletePopup}
                         hideGardenDetails={this.hideGardenDetails}

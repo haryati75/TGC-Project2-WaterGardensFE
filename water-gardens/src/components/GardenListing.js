@@ -1,5 +1,42 @@
 import React from 'react';
 
+function renderRatingIcons(n) {
+    let iconsJSX = [];
+    for (let i=0; i < n; i++) {
+        let e = (<React.Fragment key={i}>
+                <i class="fas fa-leaf"></i>
+            </React.Fragment>)
+        iconsJSX.push(e);
+    }
+    return iconsJSX;
+}
+
+function renderGardenRatings(ratings) {
+    let ratingsJSX = [];
+    for (let r of ratings) {
+        let e = (<React.Fragment key={r.id}>
+            <li>
+            {renderRatingIcons(r.level)} - {r.comment}
+            </li>
+            </React.Fragment>)
+        ratingsJSX.push(e);
+    }
+    return ratingsJSX;
+}
+
+function renderGardenPlants(plants) {
+    let plantsJSX = [];
+    for (let p of plants) {
+        let e = (<React.Fragment key={p.id}>
+            <li>
+                {p.name}
+            </li>
+            </React.Fragment>)
+        plantsJSX.push(e);
+    }
+    return plantsJSX;
+}
+
 function GardenListing(props) {
     return (
         <React.Fragment>
@@ -16,14 +53,15 @@ function GardenListing(props) {
                             <p className="card-text">{g.desc}</p>
                             <h5>Aquascaper: {g.aquascaper.name}</h5>
                             <p>Website: {g.aquascaper.email}</p>
-                            <p>Plants:</p>
+                            <h6>Plants:</h6>
                             <ul>
-                                {Array.isArray(g.plants) ? g.plants.map(p => <li key={p.id}>{p.name}</li>) : null}
+                                {renderGardenPlants(g.plants)}
                             </ul>
-                            <button
-                                className="btn btn-info me-3"
-                                onClick={props.addRatings}
-                            >Rate this Garden</button>
+
+                            <h6>Ratings and Comments:</h6>
+                            <ul>
+                                {renderGardenRatings(g.ratings)}
+                            </ul>
                             <button
                                 className="btn btn-success me-3"
                                 onClick={()=>{

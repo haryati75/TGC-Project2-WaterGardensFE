@@ -1,5 +1,6 @@
 import React from 'react';
-import logo from './water-gardens-logo-small.png';
+// import logo from './water-gardens-logo-small.png';
+import logo from './water-gardens-logo-v2-small.jpg';
 
 function Footer(props) {
     return (

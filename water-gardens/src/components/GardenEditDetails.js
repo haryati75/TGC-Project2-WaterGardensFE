@@ -35,7 +35,7 @@ function renderGardenPlants(plants, deleteGardenPlant) {
         let e = (<React.Fragment key={p.id}>
             <div className="card mx-3" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                <div cardName="card-body">
+                <div className="card-body">
                     <h6 className="card-subtitle mx-auto">{p.name} 
                         <button className="btn btn-danger btn-sm ms-3"
                                 onClick={() => { deleteGardenPlant(p.id); }}
@@ -57,7 +57,7 @@ function renderAddGardenPlantsDropdown(props) {
                 aria-label=".form-select"
                 name="toAddGardenPlantId"
                 value={props.toAddGardenPlantId}
-                onChange={props.updateToAddGardenFields}
+                onChange={props.updateToAddGardenPlantFields}
                 >
                 <option value="">Select Plant for Garden</option>
                 {props.allPlantsDropdown.map( p => 

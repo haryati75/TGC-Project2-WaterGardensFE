@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css');
 
 ul.nav-tabs > li.nav-item > button.active {
   background-color: #344FA1;
@@ -58,8 +59,34 @@ header > div {
     transform: translate(-50%, -50%);
   }
 
-
   .card-img-top {
     max-height: 300px;
     max-width: 300px;
   }
+
+/* Star Ratings CSS */
+.fa-leaf {
+  color: #17a151;
+}
+
+.starrating > input {display: none;}  /* Remove radio buttons */
+
+.starrating > label:before { 
+  content: "\f06c"; /* leaf f06c heart f004 star f005*/
+  margin: 2px;
+  font-size: 2em;
+  font-family: FontAwesome;
+  display: inline-block; 
+}
+
+.starrating > label
+{
+  color: #d2e7c5; /* Start lighter color when not clicked */
+}
+
+.starrating > input:checked ~ label
+{ color: #17a151 ; } /* Set  color when star checked */
+
+.starrating > input:hover ~ label
+{ color: #17a151 ;  } /* Set  color when star hover */
+
