@@ -1,9 +1,47 @@
 import React from 'react';
 
+function renderSmartTagsDropDown(props) {
+    // need to change to checkboxes
+    return (
+        <React.Fragment key={1}>
+            <select 
+                className="form-select" 
+                aria-label=".form-select"
+                name="aquascaperSelectedGardenListing"
+                value={props.smartTagsSelectedPlantListing}
+                onChange={props.updateFormField}
+                >      
+                <option value={""}>Show All</option>  
+                {props.plantSmartTags.map( l => 
+                    <React.Fragment key={l}>
+                        <option value={l}>{l}</option>
+                    </React.Fragment>
+                )}
+            </select>
+
+
+            {/* <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                <label class="form-check-label" for="flexCheckChecked">
+                    Checked checkbox
+                </label>
+            </div> */}
+
+
+
+
+        </React.Fragment>
+    )
+}
+
 function PlantListing(props) {
     return (
         <React.Fragment>
             <h1>Plants Listing</h1>
+            Select Multiple Keywords: {renderSmartTagsDropDown(props)}
+
+            <hr></hr>
+
             <div className="row">
             {props.plants.map( p => 
                 <React.Fragment key={p._id}>

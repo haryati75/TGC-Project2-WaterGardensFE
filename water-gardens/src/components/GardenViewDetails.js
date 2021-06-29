@@ -34,7 +34,7 @@ function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card-body mb-3 mx-3" style={{width : "18rem"}}>
+            <div className="card mb-3 mx-3 text-center" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                 <p className="card-footer">{p.name} (Care: {p.care})</p>
             </div>
@@ -93,7 +93,7 @@ function GardenViewDetails(props) {
         <React.Fragment>
             <div className="card mt-3" style={{width : "80%"}}>
 
-                <img className="card-img-bottom" src={props.garden.photoURL} alt={props.garden.name}/>
+                <img className="rounded mx-auto d-block" style={{width : "80%"}} src={props.garden.photoURL} alt={props.garden.name}/>
                 <div className="card-body">
                     <h1 className="card-title">{props.garden.name}</h1>
                     <h5 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h5>
@@ -111,7 +111,7 @@ function GardenViewDetails(props) {
                 </div>
             </div>
 
-            <div className="container mt-3">
+            <div className="container d-flex justify-content-start flex-row mt-3">
                 <button
                     className="btn btn-primary me-3"
                     onClick={props.showGardenEditDetails}
@@ -119,7 +119,7 @@ function GardenViewDetails(props) {
                 <button
                     className="btn btn-danger me-3"
                     onClick={() => {
-                        props.displayDeletePopup(props.garden._id, "garden");
+                        props.displayDeletePopup(props.garden._id, props.garden.name, props.garden.photoURL, "garden");
                     }}
                 >Delete Garden</button>
                 <button

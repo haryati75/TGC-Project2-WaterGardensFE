@@ -78,7 +78,7 @@ function GardenAddNew(props) {
                 />
             </div>
             <div className="card">
-                <img className="card-img-top" src={props.newGardenPhotoURL} alt={props.newGardenName}/>
+                <img className="rounded mx-auto d-block" style={{width : "50%"}} src={props.newGardenPhotoURL} alt={props.newGardenName}/>
                 <div className="label">Photo URL:</div>
                 <input
                     type="text"

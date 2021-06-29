@@ -57,6 +57,8 @@ class WaterGardens extends React.Component {
         // to process deletion
         'deleteWhat': "",
         'deleteId': null,
+        'deleteName' : "",
+        'deletePhotoURL' : "",
         'showDeletePopup': false,
 
         // to edit plant
@@ -99,7 +101,9 @@ class WaterGardens extends React.Component {
         'topPlants' : [],
         'statsGardens' : [],
         'aquascaperNames' : [],
+        'plantSmartTags' : [],
         'aquascaperSelectedGardenListing' : "",
+        'smartTagsSelectedPlantListing' : [],
         'complexityLevelSelectedGardenListing' : "",
         'homeSelectedListing' : "latest",
         'showN' : 4,
@@ -128,6 +132,7 @@ class WaterGardens extends React.Component {
         // to load stats of gardens and aquascapers names for Garden Listing tab
         let statsGardensData = await this.fetchData("/gardens/ratings");
         let aquascaperNamesData = await this.fetchData("/aquascapers/names");
+        let plantSmartTagsData = await this.fetchData("/plants/smarttags");
 
         let now = new Date()
         let nowDate = now.getDate() + "-" + (now.getMonth()+1) + "-" + now.getFullYear()
@@ -140,6 +145,7 @@ class WaterGardens extends React.Component {
             'topGardens' : this.sortTopGardensRatings(topGardensData),
             'statsGardens' : statsGardensData,
             'aquascaperNames' : aquascaperNamesData,
+            'plantSmartTags' : plantSmartTagsData,
             'refreshedOn' : nowDate + " " + nowTime
         })
     }
@@ -732,20 +738,23 @@ class WaterGardens extends React.Component {
             return (
                 <React.Fragment>
                     <div className="popup-background">
-                        <div className="popup card">
-                            <div className="card-body">
-                                <h5 className="card-title">Delete a {this.state.deleteWhat}</h5>
-                                <p className="card-text">Are you sure you want to delete this {this.state.deleteWhat}?</p>
-                                <p className="card-text">{this.state.deleteId}</p>
+                        <div className="popup card text-center">
+                            <div className="card-header">Delete {this.state.deleteWhat}</div>
+                            <img className="rounded mx-auto d-block" style={{width : "30%"}} src={this.state.deletePhotoURL} alt={this.state.deleteName}/>
+                            <div className="card-text">
+                                Are you sure you want to delete {this.state.deleteName}?
+                            </div>
+                            <div className="card-footer">
                                 <button 
                                     className="btn btn-secondary me-3" 
                                     onClick={() => {this.hideDeletePopup(false)}}
                                 >Close</button>
                                 <button 
-                                    className="btn btn-primary me-3" 
+                                    className="btn btn-danger me-3" 
                                     onClick={() => {this.hideDeletePopup(true)}}
                                 >Confirm Delete</button>
                             </div>
+                            ID: {this.state.deleteId}
                         </div>
                     </div>
                 </React.Fragment>
@@ -756,10 +765,12 @@ class WaterGardens extends React.Component {
     }
 
     // toggle display/hide of the state variables
-    displayDeletePopup = (idToDelete, deleteWhat) => {
+    displayDeletePopup = (idToDelete, nameToDelete, photoURLToDelete, deleteWhat) => {
         this.setState({
           'showDeletePopup' : true,
           'deleteId' : idToDelete,
+          'deleteName' : nameToDelete,
+          'deletePhotoURL' : photoURLToDelete,
           'deleteWhat' : deleteWhat
         });
     };
@@ -773,6 +784,8 @@ class WaterGardens extends React.Component {
             this.setState({
                 'deleteWhat' : "",
                 'deleteId' : null,
+                'deleteName' : "",
+                'deletePhotoURL' : "",
                 'showDeletePopup' : false
             });
         }
@@ -796,6 +809,8 @@ class WaterGardens extends React.Component {
                 'active': 'plant-listing',
                 'deleteWhat' : "",
                 'deleteId' : null,
+                'deleteName' : "",
+                'deletePhotoURL' : "",
                 'showDeletePopup' : false
             });
 
@@ -823,6 +838,8 @@ class WaterGardens extends React.Component {
                 'active': 'garden-listing',
                 'deleteWhat' : "",
                 'deleteId' : null,
+                'deleteName' : "",
+                'deletePhotoURL' : "",
                 'showDeletePopup' : false
             });
 
@@ -915,7 +932,6 @@ class WaterGardens extends React.Component {
                         complexityLevelSelectedGardenListing={this.state.complexityLevelSelectedGardenListing}
                         updateFormField={this.updateFormField}
                         viewGardenDetails={this.viewGardenDetails}
-                        displayDeletePopup={this.displayDeletePopup} 
                     />
                 </React.Fragment>
             );
@@ -961,9 +977,11 @@ class WaterGardens extends React.Component {
                 <React.Fragment>
                     <PlantListing 
                         plants={this.state.plants} 
+                        plantSmartTags={this.state.plantSmartTags}
+                        smartTagsSelectedPlantListing={this.state.smartTagsSelectedPlantListing}
+                        updateFormField={this.updateFormField}
                         viewPlantDetails={this.viewPlantDetails}
                         increasePlantLikesByOne={this.increasePlantLikesByOne}
-                        displayDeletePopup={this.displayDeletePopup}
                     />
                 </React.Fragment>
             );

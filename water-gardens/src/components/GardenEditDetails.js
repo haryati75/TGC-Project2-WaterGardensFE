@@ -33,7 +33,7 @@ function renderGardenPlants(plants, deleteGardenPlant) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card mx-3" style={{width : "18rem"}}>
+            <div className="card mx-3 text-center" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                 <div className="card-body">
                     <h6 className="card-subtitle mx-auto">{p.name} - {p.care}
@@ -142,7 +142,7 @@ function GardenEditDetails (props) {
             </div>
 
             <div className="card">
-                <img className="card-img p-3" src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
+                <img className="rounded mx-auto d-block" style={{width : "50%"}} src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
                 <div className="label">Photo URL:</div>
                 <input
                     type="text"

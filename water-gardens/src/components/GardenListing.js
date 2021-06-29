@@ -51,7 +51,6 @@ function renderComplexityLevels(props) {
     )
 }
 
-
 function renderRatingIcons(n) {
     let iconsJSX = [];
     for (let i=0; i < n; i++) {
