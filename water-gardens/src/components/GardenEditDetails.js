@@ -36,7 +36,7 @@ function renderGardenPlants(plants, deleteGardenPlant) {
             <div className="card mx-3" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                 <div className="card-body">
-                    <h6 className="card-subtitle mx-auto">{p.name} 
+                    <h6 className="card-subtitle mx-auto">{p.name} - {p.care}
                         <button className="btn btn-danger btn-sm ms-3"
                                 onClick={() => { deleteGardenPlant(p.id); }}
                             ><i className="far fa-trash-alt"></i>
@@ -62,7 +62,7 @@ function renderAddGardenPlantsDropdown(props) {
                 <option value="">Select Plant for Garden</option>
                 {props.allPlantsDropdown.map( p => 
                     <React.Fragment key={p.id}>
-                        <option value={p.id}>{p.name}</option>
+                        <option value={p.id}>({p.care}) {p.name}</option>
                     </React.Fragment>
                 )}
             </select>

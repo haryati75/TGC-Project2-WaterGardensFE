@@ -36,7 +36,7 @@ function renderGardenPlants(plants) {
         let e = (<React.Fragment key={p.id}>
             <div className="card" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                <h6 className="card-subtitle">{p.name}</h6>
+                <h6 className="card-subtitle">{p.name} (Care: {p.care})</h6>
             </div>
         </React.Fragment>)
         plantsJSX.push(e);
@@ -55,15 +55,22 @@ function renderRatingIcons(n) {
     return iconsJSX;
 }
 
-function renderGardenRatings(gardenId, ratings, deleteGardenRating) {
+function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRating) {
     let ratingsJSX = [];
     for (let r of ratings) {
         let e = (<React.Fragment key={r.id}>
             <li>
                 {renderRatingIcons(r.level)} - {r.comment}
+
                 <button className="btn btn-sm"
-                    onClick={() => { deleteGardenRating(gardenId, r.id); }}
-                ><i className="far fa-trash-alt" style={{color: "red"}}></i></button>
+                    onClick={() => { editGardenRating(gardenId, r.id); }}>
+                    <i className="fas fa-pencil-alt" style={{color: "blue"}}></i>
+                </button>
+
+                <button className="btn btn-sm"
+                    onClick={() => { deleteGardenRating(gardenId, r.id); }}>
+                    <i className="far fa-trash-alt" style={{color: "red"}}></i>
+                </button>
             </li>
             </React.Fragment>)
         ratingsJSX.push(e);
@@ -99,7 +106,7 @@ function GardenViewDetails(props) {
                 <h6>Ratings and Comments:</h6>
                 <div>
                     <ul>
-                        {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating)}
+                        {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating, props.editGardenRating)}
                     </ul>
                 </div>
             </div>

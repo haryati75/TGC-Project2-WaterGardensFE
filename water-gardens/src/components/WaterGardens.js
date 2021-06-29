@@ -24,8 +24,7 @@ class WaterGardens extends React.Component {
         'plants': [],
         'gardens': [],
         'active': 'home',
-        'homeSelectedListing' : "",
-
+        
         // Toggle between Listing All or View Detail of One
         'showPlant': false,
         'plantBeingShown': 0,
@@ -89,6 +88,7 @@ class WaterGardens extends React.Component {
         'toAddGardenPlantId' : 0,
         'toAddGardenPlantName' : "",
         'toAddGardenPlantPhotoURL' : "",
+        'toAddGardenPlantCare' : "",
 
         // to add a rating to a garden
         'toAddGardenRatingLevel' : 0,
@@ -97,6 +97,8 @@ class WaterGardens extends React.Component {
         // home highlights: top garden/plants
         'topGardens' : [],
         'topPlants' : [],
+        'homeSelectedListing' : "latest",
+        'showN' : 4,
 
         // refresh datetimestamp
         'refreshedOn' : null
@@ -113,8 +115,12 @@ class WaterGardens extends React.Component {
     async componentDidMount() {
         let plantsData = await this.fetchData("/plants");
         let gardensData = await this.fetchData("/gardens");
-        let topPlantsData = await this.fetchData("/plants/top");
-        let topGardensData = await this.fetchData("/gardens/top");
+        
+        let showN = this.state.showN;
+        // show latest plants and gardens
+        let topPlantsData = await this.fetchData("/plants/top?n=" + showN);
+        let topGardensData = await this.fetchData("/gardens/top?n=" + showN);
+
         let now = new Date()
         let nowDate = now.getDate() + "-" + (now.getMonth()+1) + "-" + now.getFullYear()
         let nowTime = now.toLocaleTimeString()
@@ -126,6 +132,12 @@ class WaterGardens extends React.Component {
             'topGardens' : topGardensData,
             'refreshedOn' : nowDate + " " + nowTime
         })
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.active === "home" && this.props.active !== prevProps.active) {
+            this.refreshHomeData()
+        }
     }
 
     // ------------------------
@@ -145,6 +157,43 @@ class WaterGardens extends React.Component {
 
     refreshAllData = () => {
         this.componentDidMount();
+    }
+
+    refreshHomeData = async () => {
+        let showN = "top?n=" + this.state.showN;
+        let plantCriteria = showN;
+        let gardenCriteria = showN;
+        let topPlantsData = [];
+        let topGardensData = [];
+
+        if (this.state.homeSelectedListing === "beginners") {
+            plantCriteria += "&care=easy";
+            gardenCriteria += "&level=beginner";
+
+        } else if (this.state.homeSelectedListing === "popular") {
+            plantCriteria += "&likes=10";
+            gardenCriteria += "&rating=3";
+
+        } else if (this.state.homeSelectedListing === "professionals") {
+            plantCriteria += "&care=medium&care=hard";
+
+        } else if (this.state.homeSelectedListing === "worst") {
+            plantCriteria += "&likes=-10";
+            gardenCriteria += "&rating=-3";
+        }
+
+        topPlantsData = await this.fetchData("/plants/" + plantCriteria);
+
+        if (this.state.homeSelectedListing === "professionals") {
+            topGardensData = await this.fetchData("/aquascapers/" + gardenCriteria);
+        } else {
+            topGardensData = await this.fetchData("/gardens/" + gardenCriteria);
+        }
+
+        this.setState({
+            'topPlants' : topPlantsData,
+            'topGardens' : topGardensData,
+        })
     }
 
     // ------------------------
@@ -258,13 +307,15 @@ class WaterGardens extends React.Component {
             this.setState({
                 'toAddGardenPlantId' : wantedPlant.id,
                 'toAddGardenPlantName' : wantedPlant.name,
-                'toAddGardenPlantPhotoURL' : wantedPlant.photoURL
+                'toAddGardenPlantPhotoURL' : wantedPlant.photoURL,
+                'toAddGardenPlantCare' : wantedPlant.care
             })
         } else {
             this.setState({
                 'toAddGardenPlantId' : 0,
                 'toAddGardenPlantName' : "",
-                'toAddGardenPlantPhotoURL' : ""
+                'toAddGardenPlantPhotoURL' : "",
+                'toAddGardenPlantCare' : ""
             })
         }
     }
@@ -326,7 +377,10 @@ class WaterGardens extends React.Component {
             alert("Delete Garden Rating failed. See console.")
             console.log(e)
         }   
-    
+    }
+
+    editGardenRating = (gardenId, ratingId) => {
+
     }
 
     // adding sub-document with referential integrity (i.e. plant must exist before adding to garden)
@@ -338,7 +392,8 @@ class WaterGardens extends React.Component {
             'editedGardenPlants' : clonedArray,
             'toAddGardenPlantId' : 0,
             'toAddGardenPlantName' : "",
-            'toAddGardenPlantPhotoURL' : ""
+            'toAddGardenPlantPhotoURL' : "",
+            'toAddGardenPlantCare' : ""
         })
     }
 
@@ -403,6 +458,7 @@ class WaterGardens extends React.Component {
                 'toAddGardenPlantId' : 0,
                 'toAddGardenPlantName' :"",
                 'toAddGardenPlantPhotoURL' : "",
+                'toAddGardenPlantCare' : "",
     
                 'editGarden': false,
                 'gardenBeingShown' : modifiedGarden,
@@ -528,7 +584,8 @@ class WaterGardens extends React.Component {
             return {
                 'id' : p._id,
                 'name' : p.name,
-                'photoURL' : p.photoURL
+                'photoURL' : p.photoURL,
+                'care' : p.care
             }
         })
     
@@ -550,6 +607,7 @@ class WaterGardens extends React.Component {
             'toAddGardenPlantId' : 0,
             'toAddGardenPlantName' :"",
             'toAddGardenPlantPhotoURL' : "",
+            'toAddGardenPlantCare' : "",
 
             'editGarden': true,
             'active': "garden-edit"
@@ -575,6 +633,7 @@ class WaterGardens extends React.Component {
             'toAddGardenPlantId' : 0,
             'toAddGardenPlantName' :"",
             'toAddGardenPlantPhotoURL' : "",
+            'toAddGardenPlantCare' : "",
 
             'editGarden': false,
             'active': "garden-view" 
@@ -759,6 +818,8 @@ class WaterGardens extends React.Component {
                         homeSelectedListing={this.state.homeSelectedListing}
                         topPlants={this.state.topPlants}
                         topGardens={this.state.topGardens}
+                        showN={this.state.showN}
+                        refreshHomeData={this.refreshHomeData}
                         updateFormField={this.updateFormField}
                         viewGardenDetails={this.viewGardenDetails}
                         viewPlantDetails={this.viewPlantDetails}
@@ -786,6 +847,7 @@ class WaterGardens extends React.Component {
                         toAddGardenPlantId={this.state.toAddGardenPlantId}
                         toAddGardenPlantName={this.state.toAddGardenPlantName}
                         toAddGardenPlantPhotoURL={this.state.toAddGardenPlantPhotoURL}
+                        toAddGardenPlantCare={this.state.toAddGardenPlantCare}
                         updateToAddGardenPlantFields={this.updateToAddGardenPlantFields}
                         addGardenPlant={this.addGardenPlant}
                         deleteGardenPlant={this.deleteGardenPlant}
@@ -807,7 +869,7 @@ class WaterGardens extends React.Component {
                         toAddGardenRatingComment={this.state.toAddGardenRatingComment}
                         updateFormField={this.updateFormField}
                         addGardenRating={this.addGardenRating}
-
+                        editGardenRating={this.editGardenRating}
                         deleteGardenRating={this.deleteGardenRating}
 
                         displayDeletePopup={this.displayDeletePopup}
@@ -923,6 +985,7 @@ class WaterGardens extends React.Component {
                                 aria-current={this.state.active==="home" ? "page" : "false"}
                                 onClick={() => {
                                     this.setActive("home");
+                                    this.refreshHomeData();
                                 }}
                             >Highlights
                             </button>
