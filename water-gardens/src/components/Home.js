@@ -15,8 +15,8 @@ function renderFeaturedListDropdown(props) {
     return (
         <React.Fragment>
             <select 
-                className="form-select form-select-sm" 
-                aria-label=".form-select-sm example"
+                className="form-select" 
+                aria-label=".form-select example"
                 name="homeSelectedListing"
                 value={props.homeSelectedListing}
                 onChange={props.updateFormField}

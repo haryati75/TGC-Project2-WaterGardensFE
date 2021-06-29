@@ -34,9 +34,9 @@ function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card" style={{width : "18rem"}}>
+            <div className="card-body mb-3 mx-3" style={{width : "18rem"}}>
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                <h6 className="card-subtitle">{p.name} (Care: {p.care})</h6>
+                <p className="card-footer">{p.name} (Care: {p.care})</p>
             </div>
         </React.Fragment>)
         plantsJSX.push(e);
@@ -59,7 +59,7 @@ function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRa
     let ratingsJSX = [];
     for (let r of ratings) {
         let e = (<React.Fragment key={r.id}>
-            <li>
+            <li className="list-group-item">
                 {renderRatingIcons(r.level)} - {r.comment}
 
                 <button className="btn btn-sm"
@@ -78,6 +78,15 @@ function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRa
     return ratingsJSX;
 }
 
+function renderGardenRatingsStats (gardenId, statsGardens) {
+    let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
+    return (<React.Fragment key={gardenId}>
+        <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
+        <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+    </React.Fragment>)
+}
+
+
 function GardenViewDetails(props) {
 
     return (
@@ -94,26 +103,35 @@ function GardenViewDetails(props) {
                     <p className="card-text">Weeks To Complete: {props.garden.weeksToComplete}</p>
                     <p className="card-text">Completion Date: {props.garden.completionDate}</p>
                     <p className="card-text">Website/Email: {props.garden.aquascaper.email}</p>
+                    <h6>Plants found in this Garden:</h6>
+                </div>
+                
+                <div className="container d-flex justify-content-start flex-row">
+                    {renderGardenPlants(props.garden.plants)}
                 </div>
             </div>
-            <div className="row">
-                <h6>Plants found in this Garden:</h6>
-                {renderGardenPlants(props.garden.plants)}
+
+            <div className="container mt-3">
+                <button
+                    className="btn btn-primary me-3"
+                    onClick={props.showGardenEditDetails}
+                >Edit Garden</button>
+                <button
+                    className="btn btn-danger me-3"
+                    onClick={() => {
+                        props.displayDeletePopup(props.garden._id, "garden");
+                    }}
+                >Delete Garden</button>
+                <button
+                    className="btn btn-dark me-3"
+                    onClick={props.hideGardenDetails}
+                >Go back <i className="fas fa-th-list"></i></button>
             </div>
 
             <hr></hr>
-            <div className="row">
-                <h6>Ratings and Comments:</h6>
-                <div>
-                    <ul>
-                        {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating, props.editGardenRating)}
-                    </ul>
-                </div>
-            </div>
 
-
-            <div className="row">
-                <div className="label">Rate Me: </div>
+            <div className="row" style={{width : "80%"}}>
+                <div className="label">Rate this Garden: </div>
                 <div className="container">
                     <div className="starrating d-flex justify-content-end flex-row-reverse">
                         {renderRatingLevels(props)}
@@ -138,22 +156,26 @@ function GardenViewDetails(props) {
                 >Submit your rating and comments
             </button>
 
-            <hr></hr>
+            <div className="card mt-3" style={{width: "50%"}}>
+                <div className="card-header">
+                    Ratings Statistics:
+                </div>
+                <ul className="list-group list-group-flush">
+                    {renderGardenRatingsStats(props.garden._id, props.statsGardens)}
+                </ul>
+            </div>
+               
+            <div className="card mt-3" style={{width: "80%"}}>
+                <div className="card-header">
+                    All Ratings and Comments
+                </div>
+                <ul className="list-group list-group-flush">
+                    {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating, props.editGardenRating)}
+                </ul>
+            </div>
+            
 
-            <button
-                className="btn btn-primary me-3"
-                onClick={props.showGardenEditDetails}
-            >Edit Garden</button>
-            <button
-                className="btn btn-danger me-3"
-                onClick={() => {
-                    props.displayDeletePopup(props.garden._id, "garden");
-                }}
-            >Delete Garden</button>
-            <button
-                className="btn btn-dark me-3"
-                onClick={props.hideGardenDetails}
-            >Go back <i className="fas fa-th-list"></i></button>
+
         </React.Fragment>
     )
 }

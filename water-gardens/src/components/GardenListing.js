@@ -1,27 +1,74 @@
 import React from 'react';
 
+function renderAquascaperNamesDropdown(props) {
+    // Dropdown list for Complexity
+    return (
+        <React.Fragment key={1}>
+            <select 
+                className="form-select" 
+                aria-label=".form-select"
+                name="aquascaperSelectedGardenListing"
+                value={props.aquascaperSelectedGardenListing}
+                onChange={props.updateFormField}
+                >      
+                <option value={""}>Show All</option>  
+                {props.aquascaperNames.map( l => 
+                    <React.Fragment key={l}>
+                        <option value={l}>{l}</option>
+                    </React.Fragment>
+                )}
+            </select>
+        </React.Fragment>
+    )
+}
+
+const complexityLevels = [
+    {key: "beginner", label: "Beginner"}, 
+    {key: "intermediate", label: "Intermediate"},
+    {key: "semi-professional", label: "Semi-Professional"},
+    {key: "professional", label: "Professional"}
+]
+
+function renderComplexityLevels(props) {
+    // Dropdown list for Complexity
+    return (
+        <React.Fragment>
+            <select 
+                className="form-select" 
+                aria-label=".form-select"
+                name="complexityLevelSelectedGardenListing"
+                value={props.complexityLevelSelectedGardenListing}
+                onChange={props.updateFormField}
+                >
+                <option value="">Select All</option>
+                {complexityLevels.map( l => 
+                    <React.Fragment key={l.key}>
+                        <option value={l.key}>{l.label}</option>
+                    </React.Fragment>
+                )}
+            </select>
+        </React.Fragment>
+    )
+}
+
+
 function renderRatingIcons(n) {
     let iconsJSX = [];
     for (let i=0; i < n; i++) {
         let e = (<React.Fragment key={i}>
-                <i class="fas fa-leaf"></i>
+                <i className="fas fa-leaf"></i>
             </React.Fragment>)
         iconsJSX.push(e);
     }
     return iconsJSX;
 }
 
-function renderGardenRatings(ratings) {
-    let ratingsJSX = [];
-    for (let r of ratings) {
-        let e = (<React.Fragment key={r.id}>
-            <li>
-            {renderRatingIcons(r.level)} - {r.comment}
-            </li>
-            </React.Fragment>)
-        ratingsJSX.push(e);
-    }
-    return ratingsJSX;
+function renderGardenRatingsStats (gardenId, statsGardens) {
+    let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
+    return (<React.Fragment key={gardenId}>
+        <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
+        <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+    </React.Fragment>)
 }
 
 function renderGardenPlants(plants) {
@@ -38,11 +85,28 @@ function renderGardenPlants(plants) {
 }
 
 function GardenListing(props) {
+
+    let gardensToList = props.gardens;
+
+    if (props.aquascaperSelectedGardenListing !== "") {
+        gardensToList = props.gardens.filter(g => g.aquascaper.name === props.aquascaperSelectedGardenListing ? g : null)
+    } 
+
+    if (props.complexityLevelSelectedGardenListing !== "") {
+        gardensToList = gardensToList.filter(g => g.complexityLevel === props.complexityLevelSelectedGardenListing ? g : null)
+    } 
+
     return (
         <React.Fragment>
             <h1>Gardens Listing</h1>
+
+            Select Aquascapers: {renderAquascaperNamesDropdown(props)}
+            Select Complexity: {renderComplexityLevels(props)}
+            
+            <hr></hr>
+
             <div className="row">
-            {props.gardens.map( g => 
+            {gardensToList.map( g => 
                 <React.Fragment key={g._id}>
                     <div className="card" style={{width: "30rem"}}>
                         <div className="card-body">
@@ -58,12 +122,17 @@ function GardenListing(props) {
                                 {renderGardenPlants(g.plants)}
                             </ul>
 
-                            <h6>Ratings and Comments:</h6>
-                            <ul>
-                                {renderGardenRatings(g.ratings)}
-                            </ul>
+                            <div className="card mt-3" style={{width: "100%"}}>
+                                <div className="card-header">
+                                    Ratings Statistics:
+                                </div>
+                                <ul className="list-group list-group-flush">
+                                    {renderGardenRatingsStats(g._id, props.statsGardens)}
+                                </ul>
+                            </div>
+
                             <button
-                                className="btn btn-success me-3"
+                                className="btn btn-success me-3 mt-3"
                                 onClick={()=>{
                                     props.viewGardenDetails(g._id);
                                 }}

@@ -97,6 +97,10 @@ class WaterGardens extends React.Component {
         // home highlights: top garden/plants
         'topGardens' : [],
         'topPlants' : [],
+        'statsGardens' : [],
+        'aquascaperNames' : [],
+        'aquascaperSelectedGardenListing' : "",
+        'complexityLevelSelectedGardenListing' : "",
         'homeSelectedListing' : "latest",
         'showN' : 4,
 
@@ -116,10 +120,14 @@ class WaterGardens extends React.Component {
         let plantsData = await this.fetchData("/plants");
         let gardensData = await this.fetchData("/gardens");
         
+        // to show the latest plants for Home tab
         let showN = this.state.showN;
-        // show latest plants and gardens
         let topPlantsData = await this.fetchData("/plants/top?n=" + showN);
         let topGardensData = await this.fetchData("/gardens/top?n=" + showN);
+
+        // to load stats of gardens and aquascapers names for Garden Listing tab
+        let statsGardensData = await this.fetchData("/gardens/ratings");
+        let aquascaperNamesData = await this.fetchData("/aquascapers/names");
 
         let now = new Date()
         let nowDate = now.getDate() + "-" + (now.getMonth()+1) + "-" + now.getFullYear()
@@ -129,7 +137,9 @@ class WaterGardens extends React.Component {
             'plants': plantsData,
             'gardens': gardensData,
             'topPlants' : topPlantsData,
-            'topGardens' : topGardensData,
+            'topGardens' : this.sortTopGardensRatings(topGardensData),
+            'statsGardens' : statsGardensData,
+            'aquascaperNames' : aquascaperNamesData,
             'refreshedOn' : nowDate + " " + nowTime
         })
     }
@@ -166,6 +176,8 @@ class WaterGardens extends React.Component {
         let topPlantsData = [];
         let topGardensData = [];
 
+        // if homeSelectedListing === "latest", no other criteria needed
+
         if (this.state.homeSelectedListing === "beginners") {
             plantCriteria += "&care=easy";
             gardenCriteria += "&level=beginner";
@@ -190,10 +202,23 @@ class WaterGardens extends React.Component {
             topGardensData = await this.fetchData("/gardens/" + gardenCriteria);
         }
 
+        // Filter and sort the topGardens' ratings to show top 3 ratings only
         this.setState({
             'topPlants' : topPlantsData,
-            'topGardens' : topGardensData,
+            'topGardens' : this.sortTopGardensRatings(topGardensData),
         })
+    }
+
+    sortTopGardensRatings = (gardensArray) => {
+        let transformedGardensArray = gardensArray.map( g => {
+            // sort in descending order
+            g.ratings.sort((a, b) => {
+                return b.level - a.level;
+            })
+            g.ratings.splice(3);
+            return g;
+        })
+        return transformedGardensArray;
     }
 
     // ------------------------
@@ -864,6 +889,7 @@ class WaterGardens extends React.Component {
                 <React.Fragment>
                     <GardenViewDetails 
                         garden={this.state.gardenBeingShown} 
+                        statsGardens={this.state.statsGardens}
 
                         toAddGardenRatingLevel={this.state.toAddGardenRatingLevel}
                         toAddGardenRatingComment={this.state.toAddGardenRatingComment}
@@ -883,6 +909,11 @@ class WaterGardens extends React.Component {
                 <React.Fragment>
                     <GardenListing 
                         gardens={this.state.gardens}
+                        statsGardens={this.state.statsGardens}
+                        aquascaperNames={this.state.aquascaperNames}
+                        aquascaperSelectedGardenListing={this.state.aquascaperSelectedGardenListing}
+                        complexityLevelSelectedGardenListing={this.state.complexityLevelSelectedGardenListing}
+                        updateFormField={this.updateFormField}
                         viewGardenDetails={this.viewGardenDetails}
                         displayDeletePopup={this.displayDeletePopup} 
                     />
