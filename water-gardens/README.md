@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Water Gardens API Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the front-end server for the Water Gardens project. This is a demo project for educational purposes under the Trent Global College (Singapore).
 
-## Available Scripts
+## Objectives: 
+To build the front-end user interaction of the Water Gardens Gallery website which interfaces with the back-end server and database via RESTful API calls.
 
-In the project directory, you can run:
+## Business Use Cases
+### 1. A platform for hobbyists to feature their aquascaping aquariums
+The Water Gardens Gallery features aquascaping aquariums and a repository of aquatic plants that are usually used for aquascaping. Hobbyists can submit their aquariums and the plants they used. 
 
-### `yarn start`
+### 2. Open platform for reviews and ratings
+Other hobbyists or public can give ratings and feedback on these aquariums. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 3. Suppliers of Aquascaping plants, equipments and materials
+A potential platform to sell related aquascaping products and services. Suppliers of aquatic plants can share information of the plants and see potential demands.  
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 4. Marketplace Potential
+With payment and authentication as enhancements, the platform can be used by hobbyists and enthusiasts to engage services (e.g. commissioning of an aquarium by a professional aquascaper) and to buy/sell related aquascaping products.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Main Technologies Used
+### React
+### Single Page Application
+### Managed Components
 
-### `yarn build`
+# Testing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Test critical path
+Add a plant
+Add a garden
+Edit a plant
+Edit a garden
+Delete a plant
+Delete a garden
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Deployment
+Front-end service will be deployed at Netlify linking to the GitHub repository. 
+Domain will be custom
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Gitpod starting of server and connecting to DB on npm:
+```
+npm install -g nodemon
+nodemon index.js
+```
+Environment variables: 
+```
+MONGO_URI in .env
+```
+.gitignore contains:
+```
+.env
+node_modules
+```
 
-### `yarn eject`
+Dependencies: 
+```
+yarn add express
+yarn add cors
+yarn add mongodb
+yarn add axios
+yarn add dotenv
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Background Credits
+I am an aquascaping enthusiast and admires beautifully crafted and lovingly maintained aquascape aquariums. The following credits go to the below established industry experts that inspires the development of this demo website for my school's project. 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Contents are sourced from the following websites:
+1. Aquatic Plants info from **All Ponds Solutions** - one of the UK’s leading online aquatics retailers. Their products and services are one of the most extensive ones that can be found online.
+    https://www.allpondsolutions.co.uk/aquarium/plants/
+2. Aquascaping Aquariums info from **Tropica Aquarium Plants A/S** - one of Europe and Denmark's leading supplier of aquatic plants. 
+>Tropica Aquarium Plants rolled out its first plant in May 1970, 50 years ago. Created by a passionate hobbyist, Holger Windeløv and pushed into the future by a dedicated corporate group, JPS Clemens, Tropica Aquarium Plants now services a global community of aquarists. 
+    https://tropica.com/en/inspiration/
+3. Aquascaping process and equipments info from **ADA Nature Aquarium** - a premium retailer of aquascaping equipments and aquariums.  
+>Founder Amano Takashi incorporated ecosystem and other elements found in nature to aquatic plant layout and established his own unique style called “Nature Aquarium”. In 1982, Amano founded Aqua Design Amano. The company attracted much attention for its aquarium equipment “Nature Aquarium Goods” featuring excellent quality and design. 
+    https://www.adana.co.jp/en/contents/process/index.html
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Developed by: 
+### Haryati Hassan
+Singapore
 
-## Learn More
+GitHub: haryati75
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+June 2021

@@ -107,6 +107,8 @@ class WaterGardens extends React.Component {
         'complexityLevelSelectedGardenListing' : "",
         'homeSelectedListing' : "latest",
         'showN' : 4,
+        'criteriaSearchPlantListing' : "",
+        'criteriaSearchGardenListing' : "",
 
         // refresh datetimestamp
         'refreshedOn' : null
@@ -225,6 +227,38 @@ class WaterGardens extends React.Component {
             return g;
         })
         return transformedGardensArray;
+    }
+
+    // ------------------------
+    // Plant Listing Filtered
+    // ------------------------
+    filterPlantsData = async () => {
+        let filteredPlantsData = []
+        if (this.state.criteriaSearchPlantListing !== "") {
+            filteredPlantsData = await this.fetchData("/plants?search=" + this.state.criteriaSearchPlantListing);
+        } else {
+            filteredPlantsData = await this.fetchData("/plants");
+        }
+    
+        this.setState({
+            'plants': filteredPlantsData
+        })
+    }
+
+    // ------------------------
+    // Garden Listing Filtered
+    // ------------------------
+    filterGardensData = async () => {
+        let filteredGardensData = []
+        if (this.state.criteriaSearchGardenListing !== "") {
+            filteredGardensData = await this.fetchData("/gardens?search=" + this.state.criteriaSearchGardenListing);
+        } else {
+            filteredGardensData = await this.fetchData("/gardens");
+        }
+    
+        this.setState({
+            'gardens': filteredGardensData
+        })
     }
 
     // ------------------------
@@ -927,6 +961,8 @@ class WaterGardens extends React.Component {
                     <GardenListing 
                         gardens={this.state.gardens}
                         statsGardens={this.state.statsGardens}
+                        criteriaSearchGardenListing={this.state.criteriaSearchGardenListing}
+                        filterGardensData={this.filterGardensData}
                         aquascaperNames={this.state.aquascaperNames}
                         aquascaperSelectedGardenListing={this.state.aquascaperSelectedGardenListing}
                         complexityLevelSelectedGardenListing={this.state.complexityLevelSelectedGardenListing}
@@ -979,6 +1015,8 @@ class WaterGardens extends React.Component {
                         plants={this.state.plants} 
                         plantSmartTags={this.state.plantSmartTags}
                         smartTagsSelectedPlantListing={this.state.smartTagsSelectedPlantListing}
+                        criteriaSearchPlantListing={this.state.criteriaSearchPlantListing}
+                        filterPlantsData={this.filterPlantsData}
                         updateFormField={this.updateFormField}
                         viewPlantDetails={this.viewPlantDetails}
                         increasePlantLikesByOne={this.increasePlantLikesByOne}

@@ -66,10 +66,11 @@ header > div {
 
 /* Star Ratings CSS */
 .fa-leaf {
-  color: #17a151;
+  color: #17a151; /* for rendering ratings not for input*/
 }
 
-.starrating > input {display: none;}  /* Remove radio buttons */
+/* To handle input rating level */
+.starrating > input {display: none;}  /* Hide the radio buttons */
 
 .starrating > label:before { 
   content: "\f06c"; /* leaf f06c heart f004 star f005*/

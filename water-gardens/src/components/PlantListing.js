@@ -19,7 +19,6 @@ function renderSmartTagsDropDown(props) {
                 )}
             </select>
 
-
             {/* <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
                 <label class="form-check-label" for="flexCheckChecked">
@@ -27,18 +26,31 @@ function renderSmartTagsDropDown(props) {
                 </label>
             </div> */}
 
-
-
-
         </React.Fragment>
     )
 }
+
 
 function PlantListing(props) {
     return (
         <React.Fragment>
             <h1>Plants Listing</h1>
-            Select Multiple Keywords: {renderSmartTagsDropDown(props)}
+            <div className="input-group mb-3">
+                <input type="text" 
+                    class="form-control" 
+                    placeholder="Type the search keyword" 
+                    aria-label="Plant Search Criteria" 
+                    aria-describedby="btnPlantSearch"
+                    name="criteriaSearchPlantListing"
+                    value={props.criteriaSearchPlantListing}
+                    onChange={props.updateFormField}
+                />
+                <button className="btn btn-outline-secondary" 
+                    type="button" 
+                    id="btnPlantSearch"
+                    onClick={props.filterPlantsData}>
+                Search</button>
+            </div>
 
             <hr></hr>
 
@@ -72,6 +84,5 @@ function PlantListing(props) {
         </React.Fragment>
     );
 }
-
 
 export default PlantListing;

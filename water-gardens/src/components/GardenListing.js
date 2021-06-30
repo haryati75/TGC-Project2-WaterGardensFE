@@ -101,6 +101,23 @@ function GardenListing(props) {
 
             Select Aquascapers: {renderAquascaperNamesDropdown(props)}
             Select Complexity: {renderComplexityLevels(props)}
+
+            <div className="input-group mb-3">
+                <input type="text" 
+                    class="form-control" 
+                    placeholder="Type the search keyword" 
+                    aria-label="Garden Search Criteria" 
+                    aria-describedby="btnGardenSearch"
+                    name="criteriaSearchGardenListing"
+                    value={props.criteriaSearchGardenListing}
+                    onChange={props.updateFormField}
+                />
+                <button className="btn btn-outline-secondary" 
+                    type="button" 
+                    id="btnGardenSearch"
+                    onClick={props.filterGardensData}>
+                Search</button>
+            </div>
             
             <hr></hr>
 
