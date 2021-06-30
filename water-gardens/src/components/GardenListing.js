@@ -64,10 +64,16 @@ function renderRatingIcons(n) {
 
 function renderGardenRatingsStats (gardenId, statsGardens) {
     let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
-    return (<React.Fragment key={gardenId}>
-        <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
-        <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
-    </React.Fragment>)
+    if (stats !== undefined) {
+        return (<React.Fragment key={gardenId}>
+            <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
+            <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+        </React.Fragment>)
+    } else {
+        return (<React.Fragment key={gardenId}>
+            <li className="list-group-item">No Ratings Available for this Garden</li>
+        </React.Fragment>)
+    }
 }
 
 function renderGardenPlants(plants) {
@@ -104,7 +110,7 @@ function GardenListing(props) {
 
             <div className="input-group mb-3">
                 <input type="text" 
-                    class="form-control" 
+                    className="form-control" 
                     placeholder="Type the search keyword" 
                     aria-label="Garden Search Criteria" 
                     aria-describedby="btnGardenSearch"
@@ -121,10 +127,12 @@ function GardenListing(props) {
             
             <hr></hr>
 
+            {/* <div className="card" style={{width: "26rem"}}></div> */}
+
             <div className="row">
             {gardensToList.map( g => 
                 <React.Fragment key={g._id}>
-                    <div className="card" style={{width: "30rem"}}>
+                    <div className="card col-12 col-md-6 col-lg-4 mx-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={g.photoURL} alt={g.name}/>
                             <h3 className="card-title">
@@ -138,7 +146,7 @@ function GardenListing(props) {
                                 {renderGardenPlants(g.plants)}
                             </ul>
 
-                            <div className="card mt-3" style={{width: "100%"}}>
+                            <div className="card mt-3 mx-auto">
                                 <div className="card-header">
                                     Ratings Statistics:
                                 </div>

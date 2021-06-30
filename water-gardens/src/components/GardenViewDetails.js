@@ -80,10 +80,16 @@ function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRa
 
 function renderGardenRatingsStats (gardenId, statsGardens) {
     let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
-    return (<React.Fragment key={gardenId}>
-        <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
-        <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
-    </React.Fragment>)
+    if (stats !== undefined) {
+        return (<React.Fragment key={gardenId}>
+            <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
+            <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+        </React.Fragment>)
+    } else {
+        return (<React.Fragment key={gardenId}>
+            <li className="list-group-item">No Ratings Available for this Garden</li>
+        </React.Fragment>)
+    }
 }
 
 

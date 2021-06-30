@@ -15,46 +15,19 @@ const lightingLevels = [
     {key: "high", label: "High"}
 ]
 
-function renderCareLevels(props) {
-    // Radio buttons for Ease of Care 
+function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
+    // Rendered List Dropdown 
     return (
-        careLevels.map( c => 
-            <React.Fragment key={c.key}>
-                <div className="form-check">
-                    <input
-                        type="radio"
-                        className="form-check-input"
-                        name="newPlantCare"
-                        value={c.key}
-                        checked={ props.newPlantCare === c.key }
-                        onChange={props.updateFormField}
-                    />
-                    <label className="form-check-label">{c.label}</label>
-                </div>
+        keyLabels.map( item => 
+            <React.Fragment key={item.key}>
+                <option
+                    name={fieldName}
+                    value={item.key}
+                    selected={ formField === item.key }
+                    onChange={updateFormField}
+                >{item.label}</option>
             </React.Fragment>
         )
-    )
-}
-
-function renderLightingLevels(props) {
-    // Dropdown list for Lighting
-    return (
-        <React.Fragment>
-            <select 
-                className="form-select form-select-sm" 
-                aria-label=".form-select-sm example"
-                name="newPlantLighting"
-                value={props.newPlantLighting}
-                onChange={props.updateFormField}
-                >
-                <option value="">Select Lighting Level</option>
-                {lightingLevels.map( l => 
-                    <React.Fragment key={l.key}>
-                        <option value={l.key}>{l.label}</option>
-                    </React.Fragment>
-                )}
-            </select>
-        </React.Fragment>
     )
 }
 
@@ -62,37 +35,50 @@ function PlantAddNew(props) {
     return (
         <React.Fragment>
             <h1>Add New Plant</h1>
-            <div>
-                <div className="label">Name</div>
-                <input
-                    type="text"
-                    className="form-control"
+
+            <div className="form-floating mb-3">
+                <input type="text" className="form-control" 
+                    id="newPlantName" placeholder="Plant Name"
                     name="newPlantName"
                     value={props.newPlantName}
                     onChange={props.updateFormField}
                 />
+                <label for="newPlantName">Plant Name</label>
             </div>
-            <div>
-                <div className="label">Appearance</div>
-                <input
-                    type="text"
-                    className="form-control"
+
+            <div className="form-floating mb-3">
+                <textarea className="form-control" placeholder="Describe plant appearance" 
+                    id="newPlantAppearance"
                     name="newPlantAppearance"
                     value={props.newPlantAppearance}
                     onChange={props.updateFormField}
-                />
-            </div>
-            <div>
-                <div className="label">Ease of Care:</div>
-                {renderCareLevels(props)}
-            </div>
-            <div>
-                <div className="label">Lighting:</div>
-                {renderLightingLevels(props)}
+                ></textarea>
+                <label for="newPlantAppearance">Describe its appearance</label>
             </div>
 
+            <div className="row g-2 mb-3">
+                <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" id="newPlantCare" aria-label="New Plant Care">
+                            <option selected>Select its ease of care</option>
+                            {renderedDropdown(careLevels, props.newPlantCare, props.updateFormField, "newPlantCare")}
+                        </select>
+                        <label for="newPlantCare">Ease of Care</label>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" id="newPlantLighting" aria-label="New Plant Lighting">
+                            <option selected>Select Lighting Condition</option>
+                            {renderedDropdown(lightingLevels, props.newPlantLighting, props.updateFormField, "newPlantLighting")}
+                        </select>
+                        <label for="newPlantLighting">Lighting Condition</label>
+                    </div>
+                </div>
+            </div>
+ 
             <div className="card">
-                <img className="card-img-top" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
+                <img className="card-img-top rounded mx-auto d-block" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
                 <div className="label">Photo URL:</div>
                 <input
                     type="text"
@@ -102,7 +88,7 @@ function PlantAddNew(props) {
                     onChange={props.updateFormField}
                 />
             </div>
-            <hr></hr>
+
             <button
                 className="btn btn-primary mt-3"
                 onClick={props.addNewPlant}

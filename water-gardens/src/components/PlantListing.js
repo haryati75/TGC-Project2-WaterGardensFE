@@ -7,7 +7,7 @@ function renderSmartTagsDropDown(props) {
             <select 
                 className="form-select" 
                 aria-label=".form-select"
-                name="aquascaperSelectedGardenListing"
+                name="smartTagsSelectedPlantListing"
                 value={props.smartTagsSelectedPlantListing}
                 onChange={props.updateFormField}
                 >      
@@ -18,14 +18,6 @@ function renderSmartTagsDropDown(props) {
                     </React.Fragment>
                 )}
             </select>
-
-            {/* <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                <label class="form-check-label" for="flexCheckChecked">
-                    Checked checkbox
-                </label>
-            </div> */}
-
         </React.Fragment>
     )
 }
@@ -37,7 +29,7 @@ function PlantListing(props) {
             <h1>Plants Listing</h1>
             <div className="input-group mb-3">
                 <input type="text" 
-                    class="form-control" 
+                    className="form-control" 
                     placeholder="Type the search keyword" 
                     aria-label="Plant Search Criteria" 
                     aria-describedby="btnPlantSearch"
@@ -52,12 +44,14 @@ function PlantListing(props) {
                 Search</button>
             </div>
 
+            {renderSmartTagsDropDown(props)}
+
             <hr></hr>
 
             <div className="row">
             {props.plants.map( p => 
                 <React.Fragment key={p._id}>
-                    <div className="card" style={{width: "18rem"}}>
+                    <div className="card col-6 col-md-4 col-lg-3 mx-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                             <h3 className="card-title">{p.name}</h3>

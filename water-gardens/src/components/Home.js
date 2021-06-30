@@ -94,7 +94,7 @@ function Home(props) {
             <div className="row">
             {props.topGardens.map( g => 
                 <React.Fragment key={g._id}>
-                    <div className="card" style={{width: "24rem"}}>
+                    <div className="card col-12 col-md-5 col-lg-4 me-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={g.photoURL} alt={g.name}/>
                             <h3 className="card-title">
@@ -124,7 +124,7 @@ function Home(props) {
             <div className="row">
             {props.topPlants.map( p => 
                 <React.Fragment key={p._id}>
-                    <div className="card" style={{width: "15rem"}}>
+                    <div className="card col-10 col-md-4 col-lg-3 me-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                             <h5 className="card-title">{p.name}</h5>

@@ -15,6 +15,8 @@ import GardenAddNew from './GardenAddNew';
 import GardenListing from './GardenListing';
 import GardenViewDetails from './GardenViewDetails';
 import GardenEditDetails from './GardenEditDetails';
+import GardenRatingEdit from './GardenRatingEdit';
+import PopupConfirmDelete from './PopupConfirmDelete';
 
 const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
 //const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
@@ -59,7 +61,6 @@ class WaterGardens extends React.Component {
         'deleteId': null,
         'deleteName' : "",
         'deletePhotoURL' : "",
-        'showDeletePopup': false,
 
         // to edit plant
         'editedPlantName' : "",
@@ -95,6 +96,13 @@ class WaterGardens extends React.Component {
         // to add a rating to a garden
         'toAddGardenRatingLevel' : 0,
         'toAddGardenRatingComment' : "",
+        'ratingBeingEdited' : 0,
+        'editedRatingLevel' : 0,
+        'editedRatingComment' : "",
+        'showEditRatingPopup': false,
+
+        // popups - delete plant/garden, edit/delete rating
+        'popupActive' : "",
 
         // home highlights: top garden/plants
         'topGardens' : [],
@@ -766,46 +774,14 @@ class WaterGardens extends React.Component {
     //-----------------------------------------------------
     // Handles Deletion process for both plant and garden
     //-----------------------------------------------------
-    renderDeletePopup() {
-        if (this.state.showDeletePopup) {
-            // HARYATI: to show the plant/garden name before deletion
-            return (
-                <React.Fragment>
-                    <div className="popup-background">
-                        <div className="popup card text-center">
-                            <div className="card-header">Delete {this.state.deleteWhat}</div>
-                            <img className="rounded mx-auto d-block" style={{width : "30%"}} src={this.state.deletePhotoURL} alt={this.state.deleteName}/>
-                            <div className="card-text">
-                                Are you sure you want to delete {this.state.deleteName}?
-                            </div>
-                            <div className="card-footer">
-                                <button 
-                                    className="btn btn-secondary me-3" 
-                                    onClick={() => {this.hideDeletePopup(false)}}
-                                >Close</button>
-                                <button 
-                                    className="btn btn-danger me-3" 
-                                    onClick={() => {this.hideDeletePopup(true)}}
-                                >Confirm Delete</button>
-                            </div>
-                            ID: {this.state.deleteId}
-                        </div>
-                    </div>
-                </React.Fragment>
-            );
-          } else {
-            return null;
-        }
-    }
-
-    // toggle display/hide of the state variables
+     // toggle display/hide of the state variables
     displayDeletePopup = (idToDelete, nameToDelete, photoURLToDelete, deleteWhat) => {
         this.setState({
-          'showDeletePopup' : true,
           'deleteId' : idToDelete,
           'deleteName' : nameToDelete,
           'deletePhotoURL' : photoURLToDelete,
-          'deleteWhat' : deleteWhat
+          'deleteWhat' : deleteWhat,
+          'popupActive' : "delete-" + deleteWhat
         });
     };
 
@@ -820,7 +796,7 @@ class WaterGardens extends React.Component {
                 'deleteId' : null,
                 'deleteName' : "",
                 'deletePhotoURL' : "",
-                'showDeletePopup' : false
+                'popupActive' : ""
             });
         }
     };
@@ -831,12 +807,15 @@ class WaterGardens extends React.Component {
             await axios.delete(baseURL + "/plant/" + plantId);
 
             // delete from array in state
+            let modifiedPlants = [...this.state.plants];
             let toDeleteIdx = this.state.plants.findIndex(p => p._id === plantId);
-            let modifiedPlants = [
-                ...this.state.plants.slice(0, toDeleteIdx),
-                ...this.state.plants.slice(toDeleteIdx + 1)
-            ];
-    
+            if (toDeleteIdx !== -1) {
+                modifiedPlants = [
+                    ...this.state.plants.slice(0, toDeleteIdx),
+                    ...this.state.plants.slice(toDeleteIdx + 1)
+                ];
+            }
+
             // return backk to listing and reset all delete states
             this.setState({
                 'plants': modifiedPlants,
@@ -845,7 +824,7 @@ class WaterGardens extends React.Component {
                 'deleteId' : null,
                 'deleteName' : "",
                 'deletePhotoURL' : "",
-                'showDeletePopup' : false
+                'popupActive' : ""
             });
 
         } catch(e) {
@@ -874,12 +853,38 @@ class WaterGardens extends React.Component {
                 'deleteId' : null,
                 'deleteName' : "",
                 'deletePhotoURL' : "",
-                'showDeletePopup' : false
+                'popupActive' : ""
             });
 
         } catch(e) {
             alert("Deletion of garden record failed. See console.")
             console.log(e)
+        }
+    }
+
+    //------------------------------------------------------------
+    // Manage the navigation between popups and main WaterGardens
+    //------------------------------------------------------------
+    renderPopup() {
+        if (this.state.popupActive === 'delete-plant' || this.state.popupActive === 'delete-garden') {
+            return (
+                <React.Fragment>
+                    <PopupConfirmDelete
+                        deleteWhat={this.state.deleteWhat}
+                        deleteId={this.state.deleteId}
+                        deleteName={this.state.deleteName}
+                        deletePhotoURL={this.state.deletePhotoURL}
+                        hideDeletePopup={this.hideDeletePopup}
+                    />
+                </React.Fragment>
+            )
+        } else if (this.state.popupActive === 'edit-rating' ) {
+            return (
+                <React.Fragment>
+                    <GardenRatingEdit
+                    />
+                </React.Fragment>
+            )
         }
     }
 
@@ -1159,7 +1164,7 @@ class WaterGardens extends React.Component {
                         </li>
                     </ul>
                     {this.renderContent()}
-                    {this.renderDeletePopup()}
+                    {this.renderPopup()}
                 </div>
                 <Footer 
                     refreshAllData={this.refreshAllData} 
