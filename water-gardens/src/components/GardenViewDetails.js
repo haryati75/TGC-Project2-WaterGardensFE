@@ -55,7 +55,7 @@ function renderRatingIcons(n) {
     return iconsJSX;
 }
 
-function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRating) {
+function renderGardenRatings(gardenId, ratings, deleteGardenRating, displayGardenRatingEditPopup) {
     let ratingsJSX = [];
     for (let r of ratings) {
         let e = (<React.Fragment key={r.id}>
@@ -63,7 +63,7 @@ function renderGardenRatings(gardenId, ratings, deleteGardenRating, editGardenRa
                 {renderRatingIcons(r.level)} - {r.comment}
 
                 <button className="btn btn-sm"
-                    onClick={() => { editGardenRating(gardenId, r.id); }}>
+                    onClick={() => { displayGardenRatingEditPopup(r.id, r.level, r.comment); }}>
                     <i className="fas fa-pencil-alt" style={{color: "blue"}}></i>
                 </button>
 
@@ -91,7 +91,6 @@ function renderGardenRatingsStats (gardenId, statsGardens) {
         </React.Fragment>)
     }
 }
-
 
 function GardenViewDetails(props) {
 
@@ -176,7 +175,7 @@ function GardenViewDetails(props) {
                     All Ratings and Comments
                 </div>
                 <ul className="list-group list-group-flush">
-                    {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating, props.editGardenRating)}
+                    {renderGardenRatings(props.garden._id, props.garden.ratings, props.deleteGardenRating, props.displayGardenRatingEditPopup)}
                 </ul>
             </div>
             

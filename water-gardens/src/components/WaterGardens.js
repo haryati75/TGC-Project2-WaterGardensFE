@@ -15,14 +15,15 @@ import GardenAddNew from './GardenAddNew';
 import GardenListing from './GardenListing';
 import GardenViewDetails from './GardenViewDetails';
 import GardenEditDetails from './GardenEditDetails';
-import GardenRatingEdit from './GardenRatingEdit';
+import PopupGardenRatingEdit from './PopupGardenRatingEdit';
 import PopupConfirmDelete from './PopupConfirmDelete';
 
 //const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
 //const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
+const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us11.gitpod.io";
 
 // Express deployed in Heroku
-const baseURL = "https://hh-tgc12p2-watergardens-be.herokuapp.com";
+// const baseURL = "https://hh-tgc12p2-watergardens-be.herokuapp.com";
 
 
 class WaterGardens extends React.Component {
@@ -425,7 +426,6 @@ class WaterGardens extends React.Component {
             alert("Add Garden Rating failed. See console.")
             console.log(e)
         }     
-
     }
 
     deleteGardenRating = async (gardenId, ratingId) => {
@@ -453,10 +453,6 @@ class WaterGardens extends React.Component {
             alert("Delete Garden Rating failed. See console.")
             console.log(e)
         }   
-    }
-
-    editGardenRating = (gardenId, ratingId) => {
-
     }
 
     // adding sub-document with referential integrity (i.e. plant must exist before adding to garden)
@@ -506,7 +502,6 @@ class WaterGardens extends React.Component {
             // modify the array in the state, reset state for edited fields
             let response = await axios.get(baseURL + "/garden/" + gardenId);
             let modifiedGarden = response.data;
-            console.log("Garden saved successfully", modifiedGarden);
 
             let indexToChange = this.state.gardens.findIndex(g => g._id === gardenId);
             let clonedArray = [
@@ -546,7 +541,6 @@ class WaterGardens extends React.Component {
             console.log(e);
         }
     }
-
 
     //-----------------------------------------------------
     // Toggle between Listing All Plant or View One Plant
@@ -775,6 +769,73 @@ class WaterGardens extends React.Component {
     }
 
     //-----------------------------------------------------
+    // Handles Update process Garden rating using Modal Popup
+    //-----------------------------------------------------
+    displayGardenRatingEditPopup = (ratingIdToEdit, ratingLevelToEdit, ratingCommentToEdit) => {
+        this.setState({
+            'ratingBeingEdited' : ratingIdToEdit,
+            'editedRatingLevel' : ratingLevelToEdit,
+            'editedRatingComment' : ratingCommentToEdit,
+            'popupActive': "edit-rating"
+        })
+    }
+
+    hidePopupGardenRatingEdit = (confirm) => {
+        // Check for deletion confirmation
+        if (confirm === true) {
+            this.editGardenRating(this.state.gardenBeingShown._id)
+        } else {
+            // reset all the states for deletion
+            this.setState({
+                'ratingBeingEdited' : 0,
+                'editedRatingLevel' : 0,
+                'editedRatingComment' : "",
+                'popupActive': ""
+            });
+        }
+    }
+
+    editGardenRating = async (gardenId) => {
+        try {
+            // edit garden rating route here
+            // /garden/:gid/rating/:rid/edit
+            await axios.put(baseURL + "/garden/" + gardenId + "/rating/" + this.state.ratingBeingEdited + "/edit", 
+            {
+                'level' : this.state.editedRatingLevel,
+                'comment' : this.state.editedRatingComment
+            });
+
+            // get updated garden
+            let response = await axios.get(baseURL + "/garden/" + gardenId);
+
+            // cloned and modify gardens array
+            let modifiedGarden = response.data;
+
+            let indexToChange = this.state.gardens.findIndex(g => g._id === gardenId);
+            let clonedArray = [
+                ...this.state.gardens.slice(0, indexToChange),
+                modifiedGarden,
+                ...this.state.gardens.slice(indexToChange + 1)
+            ];
+
+            // return back to view Garden
+            this.setState({
+                'gardens' : clonedArray,
+                'gardenBeingShown' : modifiedGarden,
+                'active': 'garden-view',
+                'ratingBeingEdited' : 0,
+                'editedRatingLevel' : 0,
+                'editedRatingComment' : "",
+                'popupActive': ""
+            });
+
+        } catch (e) {
+            alert("Update of Garden Rating failed. See console.")
+            console.log(e)
+        }
+    }
+
+    //-----------------------------------------------------
     // Handles Deletion process for both plant and garden
     //-----------------------------------------------------
      // toggle display/hide of the state variables
@@ -819,7 +880,7 @@ class WaterGardens extends React.Component {
                 ];
             }
 
-            // return backk to listing and reset all delete states
+            // return back to listing and reset all delete states
             this.setState({
                 'plants': modifiedPlants,
                 'active': 'plant-listing',
@@ -884,7 +945,12 @@ class WaterGardens extends React.Component {
         } else if (this.state.popupActive === 'edit-rating' ) {
             return (
                 <React.Fragment>
-                    <GardenRatingEdit
+                    <PopupGardenRatingEdit
+                        ratingBeingEdited={this.state.ratingBeingEdited}
+                        editedRatingLevel={this.state.editedRatingLevel}
+                        editedRatingComment={this.state.editedRatingComment}
+                        hidePopupGardenRatingEdit={this.hidePopupGardenRatingEdit}
+                        updateFormField={this.updateFormField}
                     />
                 </React.Fragment>
             )
@@ -954,8 +1020,9 @@ class WaterGardens extends React.Component {
                         toAddGardenRatingComment={this.state.toAddGardenRatingComment}
                         updateFormField={this.updateFormField}
                         addGardenRating={this.addGardenRating}
-                        editGardenRating={this.editGardenRating}
+                        displayGardenRatingEditPopup={this.displayGardenRatingEditPopup}
                         deleteGardenRating={this.deleteGardenRating}
+
 
                         displayDeletePopup={this.displayDeletePopup}
                         hideGardenDetails={this.hideGardenDetails}

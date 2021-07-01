@@ -6,7 +6,7 @@ function PopupConfirmDelete (props) {
             <div className="popup-background">
                 <div className="popup card text-center">
                     <div className="card-header d-flex">
-                        <div className="flex-grow-1">Delete {props.deleteWhat}</div>
+                        <div className="flex-grow-1"><h4>Delete {props.deleteWhat}</h4></div>
                         <button className="rounded" onClick={()=>{props.hideDeletePopup(false)}}>X</button>
                     </div>
                     <img className="img-thumbnail mx-auto d-block" style={{maxHeight: "60%"}} src={props.deletePhotoURL} alt={props.deleteName}/>
