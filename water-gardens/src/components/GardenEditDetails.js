@@ -141,7 +141,7 @@ function GardenEditDetails (props) {
                 />
             </div>
 
-            <div className="card">
+            <div className="card border-0">
                 <img className="rounded mx-auto d-block" style={{width : "50%"}} src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
                 <div className="label">Photo URL:</div>
                 <input

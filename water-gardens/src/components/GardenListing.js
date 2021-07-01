@@ -103,7 +103,9 @@ function GardenListing(props) {
 
     return (
         <React.Fragment>
-            <h1>Gardens Listing</h1>
+            <div className="sub-header">
+                <h2>Garden Listing</h2>
+            </div>
 
             Select Aquascapers: {renderAquascaperNamesDropdown(props)}
             Select Complexity: {renderComplexityLevels(props)}
@@ -126,8 +128,6 @@ function GardenListing(props) {
             </div>
             
             <hr></hr>
-
-            {/* <div className="card" style={{width: "26rem"}}></div> */}
 
             <div className="row">
             {gardensToList.map( g => 

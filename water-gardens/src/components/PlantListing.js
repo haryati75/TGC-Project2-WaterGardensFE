@@ -11,7 +11,7 @@ function renderSmartTagsDropDown(props) {
                 value={props.smartTagsSelectedPlantListing}
                 onChange={props.updateFormField}
                 >      
-                <option value={""}>Show All</option>  
+                <option value={''}>Show All</option>  
                 {props.plantSmartTags.map( l => 
                     <React.Fragment key={l}>
                         <option value={l}>{l}</option>
@@ -26,7 +26,11 @@ function renderSmartTagsDropDown(props) {
 function PlantListing(props) {
     return (
         <React.Fragment>
-            <h1>Plants Listing</h1>
+            
+            <div className="sub-header">
+                <h2>Plant Listing</h2>
+            </div>
+
             <div className="input-group mb-3">
                 <input type="text" 
                     className="form-control" 

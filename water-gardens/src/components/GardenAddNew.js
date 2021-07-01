@@ -13,9 +13,9 @@ function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
         keyLabels.map( item => 
             <React.Fragment key={item.key}>
                 <option
+                    key={item.key}
                     name={fieldName}
-                    value={item.key}
-                    selected={ formField === item.key }
+                    value={formField}
                     onChange={updateFormField}
                 >{item.label}</option>
             </React.Fragment>
@@ -26,7 +26,9 @@ function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
 function GardenAddNew(props) {
     return (
         <React.Fragment>
-            <h1>Add New Garden</h1>
+            <div className="sub-header">
+                <h2>Submit a new Water Garden</h2>
+            </div>
 
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" 
@@ -35,7 +37,7 @@ function GardenAddNew(props) {
                     value={props.newGardenName}
                     onChange={props.updateFormField}
                 />
-                <label for="newGardenName">Garden Name</label>
+                <label htmlFor="newGardenName">Garden Name</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -45,17 +47,22 @@ function GardenAddNew(props) {
                     value={props.newGardenDesc}
                     onChange={props.updateFormField}
                 ></textarea>
-                <label for="newGardenDesc">Describe the garden briefly</label>
+                <label htmlFor="newGardenDesc">Describe the garden briefly</label>
             </div>
 
             <div className="row g-3 mb-3">
                 <div className="col-md">
                     <div className="form-floating">
-                        <select className="form-select" id="newGardenComplexityLevel" aria-label="New Garden Complexity">
-                            <option selected>Select its complexity</option>
-                            {renderedDropdown(complexityLevels, props.newGardenComplexityLevel, props.updateFormField, "newGardenComplexityLevel")}
+                        <select className="form-select" 
+                            id="newGardenComplexityLevel" 
+                            name="newGardenComplexityLevel"
+                            value={props.newGardenComplexityLevel}
+                            onChange={props.updateFormField}
+                            aria-label="New Garden Complexity">
+                            <option defaultValue>Select its complexity</option>
+                            {renderedDropdown(complexityLevels)}
                         </select>
-                        <label for="newGardenComplexityLevel">Level of Complexity</label>
+                        <label htmlFor="newGardenComplexityLevel">Level of Complexity</label>
                     </div>
                 </div>
 
@@ -78,26 +85,29 @@ function GardenAddNew(props) {
                             value={props.newGardenWeeksToComplete}
                             onChange={props.updateFormField}
                         />
-                        <label for="newGardenWeeksToComplete">Weeks to complete</label>
+                        <label htmlFor="newGardenWeeksToComplete">Weeks to complete</label>
                     </div>
                 </div>
 
             </div>
 
-            <div className="card">
-                <img className="card-img-top rounded mx-auto d-block" style={{width : "50%"}} src={props.newGardenPhotoURL} alt={props.newGardenName}/>
-                <div className="label">Photo URL:</div>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="newGardenPhotoURL"
-                    value={props.newGardenPhotoURL}
-                    onChange={props.updateFormField}
-                />
+            <div className="card border-0">
+                <img className="rounded mx-auto d-block" style={{maxWidth : "80%"}} src={props.newGardenPhotoURL} alt={props.newGardenName}/>
+                
+                <div className="form-floating mb-3">
+                    <input type="text" className="form-control" 
+                        id="newGardenPhotoURL" placeholder="URL of Garden Image"
+                        name="newGardenPhotoURL"
+                        value={props.newGardenPhotoURL}
+                        onChange={props.updateFormField}
+                    />
+                    <label htmlFor="newGardenPhotoURL">Garden Image URL</label>
+                </div>
+
             </div>
 
             <hr></hr>
-            <h1>Aquascaper Details: </h1>
+            <h3>Aquascaper Details: </h3>
 
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" 
@@ -106,7 +116,7 @@ function GardenAddNew(props) {
                     value={props.newGardenAquascaperName}
                     onChange={props.updateFormField}
                 />
-                <label for="newGardenAquascaperName">Aquascaper Name</label>
+                <label htmlFor="newGardenAquascaperName">Aquascaper Name</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -116,13 +126,13 @@ function GardenAddNew(props) {
                     value={props.newGardenAquascaperEmail}
                     onChange={props.updateFormField}
                 />
-                <label for="newGardenAquascaperEmail">Aquascaper Website</label>
+                <label htmlFor="newGardenAquascaperEmail">Aquascaper Website</label>
             </div>
 
             <button
                 className="btn btn-primary mt-3"
                 onClick={props.addNewGarden}
-            >Add New
+            >Submit
             </button>
         </React.Fragment>
     );

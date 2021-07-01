@@ -5,8 +5,11 @@ function PopupConfirmDelete (props) {
         <React.Fragment>
             <div className="popup-background">
                 <div className="popup card text-center">
-                    <div className="card-header">Delete {props.deleteWhat}</div>
-                    <img className="rounded mx-auto d-block" style={{width : "30%"}} src={props.deletePhotoURL} alt={props.deleteName}/>
+                    <div className="card-header d-flex">
+                        <div className="flex-grow-1">Delete {props.deleteWhat}</div>
+                        <button className="rounded" onClick={()=>{props.hideDeletePopup(false)}}>X</button>
+                    </div>
+                    <img className="img-thumbnail mx-auto d-block" style={{maxHeight: "60%"}} src={props.deletePhotoURL} alt={props.deleteName}/>
                     <div className="card-text">
                         Are you sure you want to delete {props.deleteName}?
                     </div>

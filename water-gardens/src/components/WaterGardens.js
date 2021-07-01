@@ -118,7 +118,7 @@ class WaterGardens extends React.Component {
         'smartTagsSelectedPlantListing' : [],
         'complexityLevelSelectedGardenListing' : "",
         'homeSelectedListing' : "latest",
-        'showN' : 4,
+        'showN' : 3,
         'criteriaSearchPlantListing' : "",
         'criteriaSearchGardenListing' : "",
 

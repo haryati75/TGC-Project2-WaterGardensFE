@@ -34,8 +34,8 @@ function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card mb-3 mx-3 text-center" style={{width : "18rem"}}>
-                <img className="card-img-top" src={p.photoURL} alt={p.name}/>
+            <div className="card mb-3 mx-auto text-center" style={{maxWidth : "10rem"}}>
+                <img className="card-img-top img-thumbnail" src={p.photoURL} alt={p.name}/>
                 <p className="card-footer">{p.name} (Care: {p.care})</p>
             </div>
         </React.Fragment>)
@@ -48,7 +48,7 @@ function renderRatingIcons(n) {
     let iconsJSX = [];
     for (let i=0; i < n; i++) {
         let e = (<React.Fragment key={i}>
-                <i class="fas fa-leaf"></i>
+                <i className="fas fa-leaf"></i>
             </React.Fragment>)
         iconsJSX.push(e);
     }
@@ -97,9 +97,9 @@ function GardenViewDetails(props) {
 
     return (
         <React.Fragment>
-            <div className="card mt-3" style={{width : "80%"}}>
+            <div className="card mt-3 g-1">
 
-                <img className="rounded mx-auto d-block" style={{width : "80%"}} src={props.garden.photoURL} alt={props.garden.name}/>
+                <img className="rounded mx-auto d-block" style={{maxWidth : "100%"}} src={props.garden.photoURL} alt={props.garden.name}/>
                 <div className="card-body">
                     <h1 className="card-title">{props.garden.name}</h1>
                     <h5 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h5>

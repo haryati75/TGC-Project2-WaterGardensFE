@@ -15,17 +15,11 @@ const lightingLevels = [
     {key: "high", label: "High"}
 ]
 
-function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
-    // Rendered List Dropdown 
+function renderedDropdown(keyLabels) {
     return (
         keyLabels.map( item => 
             <React.Fragment key={item.key}>
-                <option
-                    name={fieldName}
-                    value={item.key}
-                    selected={ formField === item.key }
-                    onChange={updateFormField}
-                >{item.label}</option>
+                <option value={item.key}>{item.label}</option>
             </React.Fragment>
         )
     )
@@ -34,8 +28,10 @@ function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
 function PlantAddNew(props) {
     return (
         <React.Fragment>
-            <h1>Add New Plant</h1>
-
+            <div className="sub-header">
+                <h2>Submit a new Aquatic Plant</h2>
+            </div>
+            
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" 
                     id="newPlantName" placeholder="Plant Name"
@@ -43,7 +39,7 @@ function PlantAddNew(props) {
                     value={props.newPlantName}
                     onChange={props.updateFormField}
                 />
-                <label for="newPlantName">Plant Name</label>
+                <label htmlFor="newPlantName">Plant Name</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -53,46 +49,61 @@ function PlantAddNew(props) {
                     value={props.newPlantAppearance}
                     onChange={props.updateFormField}
                 ></textarea>
-                <label for="newPlantAppearance">Describe its appearance</label>
+                <label htmlFor="newPlantAppearance">Describe its appearance</label>
             </div>
 
             <div className="row g-2 mb-3">
                 <div className="col-md">
                     <div className="form-floating">
-                        <select className="form-select" id="newPlantCare" aria-label="New Plant Care">
-                            <option selected>Select its ease of care</option>
-                            {renderedDropdown(careLevels, props.newPlantCare, props.updateFormField, "newPlantCare")}
+                        <select className="form-select" 
+                            id="newPlantCare" 
+                            aria-label="New Plant Care"
+                            name="newPlantCare"
+                            value={props.newPlantCare}
+                            onChange={props.updateFormField}
+                        >
+                            {renderedDropdown(careLevels)}
                         </select>
-                        <label for="newPlantCare">Ease of Care</label>
+                        <label htmlFor="newPlantCare">Ease of Care</label>
                     </div>
                 </div>
+
                 <div className="col-md">
                     <div className="form-floating">
-                        <select className="form-select" id="newPlantLighting" aria-label="New Plant Lighting">
-                            <option selected>Select Lighting Condition</option>
-                            {renderedDropdown(lightingLevels, props.newPlantLighting, props.updateFormField, "newPlantLighting")}
+                        <select className="form-select" 
+                            id="newPlantLighting" 
+                            aria-label="New Plant Lighting"
+                            name="newPlantLighting"
+                            value={props.newPlantLighting}
+                            onChange={props.updateFormField}                       
+                        >
+                            {renderedDropdown(lightingLevels)}
                         </select>
-                        <label for="newPlantLighting">Lighting Condition</label>
+                        <label htmlFor="newPlantLighting">Lighting Condition</label>
                     </div>
                 </div>
+
             </div>
  
-            <div className="card">
-                <img className="card-img-top rounded mx-auto d-block" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
-                <div className="label">Photo URL:</div>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="newPlantPhotoURL"
-                    value={props.newPlantPhotoURL}
-                    onChange={props.updateFormField}
-                />
+            <div className="card border-0">
+                <img className="img-thumbnail mx-auto d-block" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
+                
+                <div className="form-floating mb-3">
+                    <input type="text" className="form-control" 
+                        id="newPlantPhotoURL" placeholder="URL of Plant Image"
+                        name="newPlantPhotoURL"
+                        value={props.newPlantPhotoURL}
+                        onChange={props.updateFormField}
+                    />
+                    <label htmlFor="newPlantPhotoURL">Plant Image URL</label>
+                </div>
+
             </div>
 
             <button
                 className="btn btn-primary mt-3"
                 onClick={props.addNewPlant}
-            >Add New
+            >Submit
             </button>
         </React.Fragment>
     );

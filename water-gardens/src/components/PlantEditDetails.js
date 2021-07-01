@@ -109,8 +109,8 @@ function PlantEditDetails (props) {
             <div className="label">Lighting:</div>
             {renderLightingLevels(props)}
         </div>
-        <div className="card">
-            <img className="card-img-top" src={props.editedPlantPhotoURL} alt={props.editedPlantName}/>
+        <div className="card border-0">
+            <img className="img-thumbnail mx-auto d-block" src={props.editedPlantPhotoURL} alt={props.editedPlantName}/>
             <div className="label">Photo URL:</div>
                 <input
                     type="text"

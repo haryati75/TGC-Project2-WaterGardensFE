@@ -3,8 +3,8 @@ import React from 'react';
 function PlantViewDetails(props) {
     return (
         <React.Fragment>
-            <div className="card mt-3" style={{width : "80%"}}>
-                <img className="rounded mx-auto d-block" style={{width : "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
+            <div className="card mt-3 g-1">
+                <img className="rounded mx-auto d-block" style={{maxWidth : "50%", maxHeight: "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
                 <div className="card-body">
                     <h1 className="card-title">{props.plant.name}</h1>
                     <p className="card-text">Ease of Care: {props.plant.care}</p>
@@ -13,7 +13,7 @@ function PlantViewDetails(props) {
 
                     { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? <p className="card-text">Keywords:</p> : null }
                     <div className="card-footer">
-                        {Array.isArray(props.plant.smartTags) ? props.plant.smartTags.map(t => <span class="badge rounded-pill bg-warning text-dark mx-2">{t}</span>) : null}
+                        {Array.isArray(props.plant.smartTags) ? props.plant.smartTags.map(t => <span className="badge rounded-pill bg-warning text-dark mx-2">{t}</span>) : null}
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@ function PlantViewDetails(props) {
                         props.plant.likes++;
                         props.increasePlantLikesByOne(props.plant._id);
                     }}
-                ><i class="fas fa-thumbs-up"></i> Likes: {props.plant.likes}</button>
+                ><i className="fas fa-thumbs-up"></i> Likes: {props.plant.likes}</button>
 
                 <button
                     className="btn btn-primary me-3"
@@ -41,7 +41,7 @@ function PlantViewDetails(props) {
                 <button
                     className="btn btn-dark me-3"
                     onClick={props.hidePlantDetails}
-                >Go back <i class="fas fa-th-list"></i></button>
+                >Go back <i className="fas fa-th-list"></i></button>
             </div>
 
 

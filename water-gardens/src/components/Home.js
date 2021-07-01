@@ -1,54 +1,27 @@
 import React from 'react';
 
 const featuredList = [
-    {key: "popular", label: "Top-rated Gardens and Plants"},
     {key: "latest", label: "Latest Gardens and Plants"}, 
+    {key: "popular", label: "Top-rated Gardens and Plants"},
     {key: "beginners", label: "Easy Plants and Gardens for beginners"},
     {key: "professionals", label: "Advanced aquascapers and not-so-easy plants"},
     {key: "worst", label: "Hall of Shame: unpopular gardens and plants"}
 ];
 
-const showNList = [1, 3, 5, 10];
+const showNList = [
+    {key: 1, label: "Show 1"},
+    {key: 3, label: "Show 3"},
+    {key: 5, label: "Show 5"},
+    {key: 10, label: "Show 10"}
+];
 
-function renderFeaturedListDropdown(props) {
-    // Dropdown list for Complexity
+function renderedDropdown(keyLabels) {
     return (
-        <React.Fragment>
-            <select 
-                className="form-select" 
-                aria-label=".form-select example"
-                name="homeSelectedListing"
-                value={props.homeSelectedListing}
-                onChange={props.updateFormField}
-                >        
-                {featuredList.map( l => 
-                    <React.Fragment key={l.key}>
-                        <option value={l.key}>{l.label}</option>
-                    </React.Fragment>
-                )}
-            </select>
-        </React.Fragment>
-    )
-}
-
-function renderShowNList(props) {
-    return (
-        <React.Fragment>
-            <select 
-                className="form-select form-select-sm" 
-                aria-label=".form-select-sm example"
-                name="showN"
-                value={props.showN}
-                onChange={props.updateFormField}
-                >
-                <option value={props.showN}>Show {props.showN}</option>
-                {showNList.map( l => 
-                    <React.Fragment key={l}>
-                        <option value={l}>Show {l}</option>
-                    </React.Fragment>
-                )}
-            </select>
-        </React.Fragment>
+        keyLabels.map( item => 
+            <React.Fragment key={item.key}>
+                <option value={item.key}>{item.label}</option>
+            </React.Fragment>
+        )
     )
 }
 
@@ -80,21 +53,56 @@ function renderGardenRatings(ratings) {
 function Home(props) {
     return (
         <React.Fragment>
-            <h1>Featured: {featuredList.find(f => f.key === props.homeSelectedListing).label} </h1>
-            <p>Select other highlights: </p>
-            {renderFeaturedListDropdown(props)}
-            {renderShowNList(props)}
-            <button
-                className="btn btn-primary me-3 mt-3"
-                onClick={props.refreshHomeData}
-            >Refresh List Below</button>
+            <div className="sub-header">
+                <h2>{featuredList.find(f => f.key === props.homeSelectedListing).label}</h2>
+            </div>
+
+            <div className="row g-3">
+                <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" 
+                            id="homeSelectedListing" 
+                            aria-label="Other Highlights"
+                            name="homeSelectedListing"
+                            value={props.homeSelectedListing}
+                            onChange={props.updateFormField}
+                        >
+                            {renderedDropdown(featuredList)}
+                        </select>
+                        <label htmlFor="homeSelectedListing">Other Highlights</label>
+                    </div>
+                </div>
+
+                <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" 
+                            id="showN" 
+                            aria-label="Show number of items"
+                            name="showN"
+                            value={props.showN}
+                            onChange={props.updateFormField}
+                        >
+                            {renderedDropdown(showNList)}
+                        </select>
+                        <label htmlFor="showN">Display Items</label>
+                    </div>
+                </div>
+
+                <div className="col-md">
+                    <button
+                        className="btn btn-primary"
+                        onClick={props.refreshHomeData}
+                    >Refresh List Below</button>
+                </div>
+            </div>
+          
             <hr></hr>
 
             <h3>Featured Gardens</h3>
             <div className="row">
             {props.topGardens.map( g => 
                 <React.Fragment key={g._id}>
-                    <div className="card col-12 col-md-5 col-lg-4 me-auto">
+                    <div className="card col-12 col-md-6 col-lg-4 me-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={g.photoURL} alt={g.name}/>
                             <h3 className="card-title">
@@ -124,7 +132,7 @@ function Home(props) {
             <div className="row">
             {props.topPlants.map( p => 
                 <React.Fragment key={p._id}>
-                    <div className="card col-10 col-md-4 col-lg-3 me-auto">
+                    <div className="card col-12 col-md-4 col-lg-3 me-auto">
                         <div className="card-body">
                             <img className="card-img-top" src={p.photoURL} alt={p.name}/>
                             <h5 className="card-title">{p.name}</h5>
