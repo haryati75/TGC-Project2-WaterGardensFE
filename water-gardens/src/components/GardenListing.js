@@ -4,20 +4,25 @@ function renderAquascaperNamesDropdown(props) {
     // Dropdown list for Complexity
     return (
         <React.Fragment key={1}>
-            <select 
-                className="form-select" 
-                aria-label=".form-select"
-                name="aquascaperSelectedGardenListing"
-                value={props.aquascaperSelectedGardenListing}
-                onChange={props.updateFormField}
-                >      
-                <option value={""}>Show All</option>  
-                {props.aquascaperNames.map( l => 
-                    <React.Fragment key={l}>
-                        <option value={l}>{l}</option>
-                    </React.Fragment>
-                )}
-            </select>
+            <div className="form-floating">
+                <select 
+                    className="form-select" 
+                    aria-label=".form-select"
+                    id="aquascaperSelectedGardenListing"
+                    name="aquascaperSelectedGardenListing"
+                    value={props.aquascaperSelectedGardenListing}
+                    onChange={props.updateFormField}
+                    >      
+                    <option value={""}>Show All</option>  
+                    {props.aquascaperNames.map( l => 
+                        <React.Fragment key={l}>
+                            <option value={l}>{l}</option>
+                        </React.Fragment>
+                    )}
+                </select>
+                <label htmlFor="aquascaperSelectedGardenListing">Select Aquascaper</label>
+            </div>
+
         </React.Fragment>
     )
 }
@@ -32,21 +37,25 @@ const complexityLevels = [
 function renderComplexityLevels(props) {
     // Dropdown list for Complexity
     return (
-        <React.Fragment>
-            <select 
-                className="form-select" 
-                aria-label=".form-select"
-                name="complexityLevelSelectedGardenListing"
-                value={props.complexityLevelSelectedGardenListing}
-                onChange={props.updateFormField}
-                >
-                <option value="">Select All</option>
-                {complexityLevels.map( l => 
-                    <React.Fragment key={l.key}>
-                        <option value={l.key}>{l.label}</option>
-                    </React.Fragment>
-                )}
-            </select>
+        <React.Fragment key={1}>
+            <div className="form-floating">
+                <select 
+                    className="form-select" 
+                    id="complexityLevelSelectedGardenListing"
+                    aria-label=".form-select"
+                    name="complexityLevelSelectedGardenListing"
+                    value={props.complexityLevelSelectedGardenListing}
+                    onChange={props.updateFormField}
+                    >
+                    <option value="">Show All</option>
+                    {complexityLevels.map( l => 
+                        <React.Fragment key={l.key}>
+                            <option value={l.key}>{l.label}</option>
+                        </React.Fragment>
+                    )}
+                </select>
+                <label htmlFor="complexityLevelSelectedGardenListing">Select Complexity</label>
+            </div>
         </React.Fragment>
     )
 }
@@ -107,24 +116,34 @@ function GardenListing(props) {
                 <h2>Garden Listing</h2>
             </div>
 
-            Select Aquascapers: {renderAquascaperNamesDropdown(props)}
-            Select Complexity: {renderComplexityLevels(props)}
+            <div className="row g-3">
+                <div className="col-md">
+                    {renderAquascaperNamesDropdown(props)}
+                </div>
+                <div className="col-md">
+                    {renderComplexityLevels(props)}
+                </div>
 
-            <div className="input-group mb-3">
-                <input type="text" 
-                    className="form-control" 
-                    placeholder="Type the search keyword" 
-                    aria-label="Garden Search Criteria" 
-                    aria-describedby="btnGardenSearch"
-                    name="criteriaSearchGardenListing"
-                    value={props.criteriaSearchGardenListing}
-                    onChange={props.updateFormField}
-                />
-                <button className="btn btn-outline-secondary" 
-                    type="button" 
-                    id="btnGardenSearch"
-                    onClick={props.filterGardensData}>
-                Search</button>
+                <div className="col-md">
+
+                    <div className="input-group mb-3">
+                        <input type="text" 
+                            className="form-control" 
+                            placeholder="Type the search keyword" 
+                            aria-label="Garden Search Criteria" 
+                            aria-describedby="btnGardenSearch"
+                            name="criteriaSearchGardenListing"
+                            value={props.criteriaSearchGardenListing}
+                            onChange={props.updateFormField}
+                        />
+                        <button className="btn btn-outline-secondary" 
+                            type="button" 
+                            id="btnGardenSearch"
+                            onClick={props.filterGardensData}>
+                        Search</button>
+                    </div>
+
+                </div>
             </div>
             
             <hr></hr>

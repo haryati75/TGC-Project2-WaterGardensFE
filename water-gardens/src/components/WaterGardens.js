@@ -115,7 +115,6 @@ class WaterGardens extends React.Component {
         'aquascaperNames' : [],
         'plantSmartTags' : [],
         'aquascaperSelectedGardenListing' : "",
-        'smartTagsSelectedPlantListing' : [],
         'complexityLevelSelectedGardenListing' : "",
         'homeSelectedListing' : "latest",
         'showN' : 3,
@@ -1023,7 +1022,6 @@ class WaterGardens extends React.Component {
                     <PlantListing 
                         plants={this.state.plants} 
                         plantSmartTags={this.state.plantSmartTags}
-                        smartTagsSelectedPlantListing={this.state.smartTagsSelectedPlantListing}
                         criteriaSearchPlantListing={this.state.criteriaSearchPlantListing}
                         filterPlantsData={this.filterPlantsData}
                         updateFormField={this.updateFormField}

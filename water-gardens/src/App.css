@@ -18,7 +18,12 @@ body, h1, h2, h3, h4, h5, h6, p {
 
 h1 {
   font-weight: 400;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 body, p, card-body, li, ul {
@@ -128,8 +133,8 @@ header {
     font-size: 0.8rem;
   }
 
-  header > h1 {
-    font-size: 1.5rem;
+  header h1 {
+    font-size: 2rem;
     font-weight: 700;
   }
 
@@ -138,7 +143,7 @@ header {
 /* laptop */
 @media screen and (min-width:1200px) {
 
-  header > h1 {
-    font-size: 2rem;
+  header h1 {
+    font-size: 2.5rem;
   }
 }
