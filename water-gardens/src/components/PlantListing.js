@@ -68,9 +68,9 @@ function PlantListing(props) {
                 <React.Fragment key={p._id}>
                     <div className="card col-6 col-md-4 col-lg-3 mx-auto">
                         <div className="card-body">
-                            <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                            <h3 className="card-title">{p.name}</h3>
-                            <p className="card-text">{p.appearance}</p>
+                            <img className="card-img-top" style={{maxHeight:"200px", maxWidth:"200px"}} src={p.photoURL} alt={p.name}/>
+                            <h4 className="card-title">{p.name}</h4>
+                            <p className="card-text text-listing text-truncate" >{p.appearance}</p>
                             <button
                                 className="btn btn-info me-3"
                                 onClick={() => {
@@ -83,9 +83,11 @@ function PlantListing(props) {
                                 onClick={() => {
                                     props.viewPlantDetails(p._id);
                                 }}
-                            >View Plant Details</button>
+                            >View Plant</button>
                         </div>
-
+                        <div className="card-footer">
+                            {Array.isArray(p.smartTags) ? p.smartTags.map(t => <span className="badge rounded-pill bg-warning text-dark mx-1">{t}</span>) : null}
+                        </div>
                     </div>
                 </React.Fragment>
             )}

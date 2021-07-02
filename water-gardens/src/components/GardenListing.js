@@ -34,6 +34,11 @@ const complexityLevels = [
     {key: "professional", label: "Professional"}
 ]
 
+function toComplexityLabel (key) {
+    let obj = complexityLevels.filter(c => c.key === key.toLowerCase() ? c : null)[0];
+    return (obj != null ? obj.label : key);
+}
+
 function renderComplexityLevels(props) {
     // Dropdown list for Complexity
     return (
@@ -75,12 +80,12 @@ function renderGardenRatingsStats (gardenId, statsGardens) {
     let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
     if (stats !== undefined) {
         return (<React.Fragment key={gardenId}>
-            <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
-            <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+            <li className="list-group-item card-text text-listing">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave.toFixed(2)}) - Total: {stats.count}</li>
+            <li className="list-group-item card-text text-listing">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
         </React.Fragment>)
     } else {
         return (<React.Fragment key={gardenId}>
-            <li className="list-group-item">No Ratings Available for this Garden</li>
+            <li className="list-group-item card-text text-listing">No Ratings Available for this Garden</li>
         </React.Fragment>)
     }
 }
@@ -89,11 +94,14 @@ function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <li>
+            <li className="card-text text-listing">
                 {p.name}
             </li>
             </React.Fragment>)
         plantsJSX.push(e);
+    }
+    if (plantsJSX.length === 0) {
+        return <p className="card-text text-listing">No Plants added in Garden</p>
     }
     return plantsJSX;
 }
@@ -157,10 +165,11 @@ function GardenListing(props) {
                             <h3 className="card-title">
                                 {g.name}
                             </h3>
-                            <p className="card-text">{g.desc}</p>
-                            <h5>Aquascaper: {g.aquascaper.name}</h5>
-                            <p>Website: {g.aquascaper.email}</p>
-                            <h6>Plants:</h6>
+                            <p className="card-text text-listing">{g.desc}</p>
+                            <h5 className="card-text text-listing">Aquascaper: <a href={g.aquascaper.email} target="_blank" rel="noopener noreferrer">{g.aquascaper.name}</a></h5>
+                            <p className="card-text text-listing">Complexity: {toComplexityLabel(g.complexityLevel)}</p>
+
+                            <h5 className="card-text text-listing">Plants:</h5>
                             <ul>
                                 {renderGardenPlants(g.plants)}
                             </ul>

@@ -19,12 +19,9 @@ import PopupGardenRatingEdit from './PopupGardenRatingEdit';
 import PopupConfirmDelete from './PopupConfirmDelete';
 
 //const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
-//const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us09.gitpod.io";
-const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us11.gitpod.io";
 
 // Express deployed in Heroku
-// const baseURL = "https://hh-tgc12p2-watergardens-be.herokuapp.com";
-
+const baseURL = "https://hh-tgc12p2-watergardens-be.herokuapp.com";
 
 class WaterGardens extends React.Component {
     state = {
@@ -313,7 +310,6 @@ class WaterGardens extends React.Component {
             // modify the array in the state, reset state for edited fields
             let response = await axios.get(baseURL + "/plant/" + plantId);
             let modifiedPlant = response.data;
-            console.log("Plant save successfully", modifiedPlant);
 
             let indexToChange = this.state.plants.findIndex(p => p._id === plantId);
             let clonedArray = [
@@ -1157,6 +1153,7 @@ class WaterGardens extends React.Component {
                                 aria-current={this.state.active==="garden-listing" ? "page" : "false"}
                                 onClick={() => {
                                     this.setActive("garden-listing");
+                                    this.refreshAllData();
                                 }}
                             >Gardens
                             </button>
@@ -1187,6 +1184,7 @@ class WaterGardens extends React.Component {
                                 aria-current={this.state.active==="plant-listing" ? "page" : "false"} 
                                 onClick={() => {
                                     this.setActive("plant-listing");
+                                    this.refreshAllData();
                                 }}
                             >Aquatic Plants
                             </button>

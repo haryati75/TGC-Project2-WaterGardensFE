@@ -132,7 +132,12 @@ header {
   body, p, card-body, li, ul {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .text-listing {
+    font-size: 0.9rem;
+    font-weight: 300;
   }
 
   header h1 {

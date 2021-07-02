@@ -107,11 +107,13 @@ build
 ```
 Dependencies: 
 ```
-yarn add express
-yarn add cors
-yarn add mongodb
 yarn add axios
-yarn add dotenv
+yarn add bootstrap
+```
+Created React App at the start of Project:
+```
+npx create-react-app <water-gardens>
+npm start
 ```
 
 ## Database and Backend integration via RESTful APIs

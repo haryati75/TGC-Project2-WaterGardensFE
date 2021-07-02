@@ -15,6 +15,18 @@ const showNList = [
     {key: 10, label: "Show 10"}
 ];
 
+const complexityLevels = [
+    {key: "beginner", label: "Beginner"}, 
+    {key: "intermediate", label: "Intermediate"},
+    {key: "semi-professional", label: "Semi-Professional"},
+    {key: "professional", label: "Professional"}
+]
+
+function toComplexityLabel (key) {
+    let obj = complexityLevels.filter(c => c.key === key.toLowerCase() ? c : null)[0];
+    return (obj != null ? obj.label : key);
+}
+
 function renderedDropdown(keyLabels) {
     return (
         keyLabels.map( item => 
@@ -40,8 +52,8 @@ function renderGardenRatings(ratings) {
     let ratingsJSX = [];
     for (let r of ratings) {
         let e = (<React.Fragment key={r.id}>
-            <li>
-            {renderRatingIcons(r.level)} - {r.comment}
+            <li className="list-group-item card-text text-listing">
+                {renderRatingIcons(r.level)} - {r.comment}
             </li>
             </React.Fragment>)
         ratingsJSX.push(e);
@@ -108,14 +120,20 @@ function Home(props) {
                             <h3 className="card-title">
                                 {g.name}
                             </h3>
-                            <h5 className="card-subtitle text-muted">Aquascaper: {g.aquascaper.name}</h5>
-                            <p>Complexity: {g.complexityLevel}</p>
-                            <h6>Ratings and Comments:</h6>
-                            <ul>
+                            <h5 className="card-text text-listing">Aquascaper: {g.aquascaper.name}</h5>
+                            <p className="card-text text-listing">Complexity: {toComplexityLabel(g.complexityLevel)}</p>
+
+                            <div className="card mt-3 mx-auto">
+                                <div className="card-header">
+                                    Top Ratings & Comments:
+                                </div>
+                                <ul className="list-group list-group-flush">
                                 {renderGardenRatings(g.ratings)}
-                            </ul>
+                                </ul>
+                            </div>
+
                             <button
-                                className="btn btn-success me-3"
+                                className="btn btn-success me-3 mt-3"
                                 onClick={()=>{
                                     props.viewGardenDetails(g._id);
                                 }}

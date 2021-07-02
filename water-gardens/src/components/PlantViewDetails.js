@@ -4,17 +4,27 @@ function PlantViewDetails(props) {
     return (
         <React.Fragment>
             <div className="card mt-3 g-1">
-                <img className="rounded mx-auto d-block" style={{maxWidth : "50%", maxHeight: "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
-                <div className="card-body">
+
+                <div className="card-header text-center">
                     <h1 className="card-title">{props.plant.name}</h1>
+                    <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "50%", maxHeight: "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
+                </div> 
+                
+                <div className="card-body">
+                    
                     <p className="card-text">Ease of Care: {props.plant.care}</p>
                     <p className="card-text">Lighting: {props.plant.lighting}</p>
                     <p className="card-text">Appearance: {props.plant.appearance}</p>
 
-                    { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? <p className="card-text">Keywords:</p> : null }
-                    <div className="card-footer">
-                        {Array.isArray(props.plant.smartTags) ? props.plant.smartTags.map(t => <span className="badge rounded-pill bg-warning text-dark mx-2">{t}</span>) : null}
-                    </div>
+                </div>
+                <div className="card-footer">
+                    { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? 
+                        <h5 className="mb-2">Keywords:</h5> 
+                        : null }
+                    {Array.isArray(props.plant.smartTags) ? 
+                        props.plant.smartTags.map(t => 
+                            <span className="badge rounded-pill bg-warning text-dark mx-1">{t}</span>)
+                        : null }
                 </div>
             </div>
 

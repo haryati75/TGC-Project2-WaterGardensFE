@@ -20,12 +20,12 @@ function Footer(props) {
                     </div>
                     <div className="col col-12 col-md-8 p-3">
                         <h6>References for Plants & Gardens: </h6>
-                        <p>
+                        <p className="text-listing">
                             https://www.allpondsolutions.co.uk/ | https://tropica.com/en/inspiration/
                         </p>
                         <hr></hr>
                         <h6>Website developed by: Haryati Hassan</h6>
-                        <p>A school project under Trent Global College. Use of the website is for educational purpose only.</p>
+                        <p className="text-listing">A school project under Trent Global College. Use of the website is for educational purpose only.</p>
                     </div>
                 </div>
             </div>

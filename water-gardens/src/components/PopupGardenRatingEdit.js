@@ -41,28 +41,28 @@ function PopupGardenRatingEdit (props) {
                             onClick={()=>{props.hidePopupGardenRatingEdit(false)}}
                         >X</button>
                     </div>
+
+                    <div className="card-body">
+                        <div className="row form-floating mb-3 mx-5" style={{width : "80%"}}>
+                            <div className="label">Change Rating: </div>
+                            <div className="container">
+                                <div className="starrating d-flex justify-content-end flex-row-reverse">
+                                    {renderRatingLevels(props)}
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div className="form-floating mb-3 mx-5">
+                            <input type="text" className="form-control" 
+                                id="editedRatingComment" placeholder="Rating Comment"
+                                name="editedRatingComment"
+                                value={props.editedRatingComment}
+                                onChange={props.updateFormField}
+                            />
+                            <label htmlFor="editedRatingComment">Comments: </label>
+                        </div>
+                    </div>
                     
-
-                    <div className="row" style={{width : "80%"}}>
-                        <div className="label">Change Rating: </div>
-                        <div className="container">
-                            <div className="starrating d-flex justify-content-end flex-row-reverse">
-                                {renderRatingLevels(props)}
-                            </div>
-                        </div> 
-                    </div>
-
-                    <div>
-                        <div className="label">Comments: </div>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="editedRatingComment"
-                            value={props.editedRatingComment}
-                            onChange={props.updateFormField}
-                        />
-                    </div>
-
                     <div className="card-footer">
                         <button 
                             className="btn btn-secondary me-3" 
@@ -73,7 +73,7 @@ function PopupGardenRatingEdit (props) {
                             onClick={() => {props.hidePopupGardenRatingEdit(true)}}
                         >Update</button>
                     </div>
-                    ID: {props.ratingBeingEdited}
+                    {/* ID: {props.ratingBeingEdited} */}
                 </div>
             </div>
     </React.Fragment>)

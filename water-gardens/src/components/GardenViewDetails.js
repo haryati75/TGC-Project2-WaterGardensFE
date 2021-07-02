@@ -8,6 +8,8 @@ const ratingLevels = [
     {key: "1", label: "star5"}
 ]
 
+const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
 function renderRatingLevels (props) {
     // Ratings via fontawesom icons in CSS
     let ratingsJSX = [];
@@ -34,14 +36,19 @@ function renderGardenPlants(plants) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card mb-3 mx-auto text-center" style={{maxWidth : "10rem"}}>
-                <img className="card-img-top img-thumbnail" src={p.photoURL} alt={p.name}/>
-                <p className="card-footer">{p.name} (Care: {p.care})</p>
+            <div className="card mb-3 mx-auto text-center col-6 col-md-3">
+                <div className="card-body">
+                    <img className="card-img-top" src={p.photoURL} alt={p.name}/>
+                </div>
+                <div className="card-footer">
+                    <h6 className="card-subtitle">{p.name}</h6>
+                    <p className="card-text text-listing">Care: {p.care}</p>
+                </div>
             </div>
         </React.Fragment>)
         plantsJSX.push(e);
     }
-    return plantsJSX;
+    return ( plantsJSX.length > 0 ? plantsJSX : <div className="card-title">No Plants found. Please Edit Garden to add a Plant to it.</div>);
 }
 
 function renderRatingIcons(n) {
@@ -98,21 +105,26 @@ function GardenViewDetails(props) {
         <React.Fragment>
             <div className="card mt-3 g-1">
 
-                <img className="rounded mx-auto d-block" style={{maxWidth : "100%"}} src={props.garden.photoURL} alt={props.garden.name}/>
+                <div className="card-header text-center">
+                    <h1 className="card-title">Name: {props.garden.name}</h1>
+                    <h3 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h3>
+                    <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "100%"}} src={props.garden.photoURL} alt={props.garden.name}/>
+                </div>
                 <div className="card-body">
-                    <h1 className="card-title">{props.garden.name}</h1>
-                    <h5 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h5>
-
                     <p className="card-text">Description: {props.garden.desc}</p>
                     <p className="card-text">Complexity: {props.garden.complexityLevel}</p>
                     <p className="card-text">Weeks To Complete: {props.garden.weeksToComplete}</p>
-                    <p className="card-text">Completion Date: {props.garden.completionDate}</p>
+                    <p className="card-text">Completion Date: {new Date(props.garden.completionDate).toLocaleDateString('en-GB', optionsDate)}</p>
                     <p className="card-text">Website/Email: {props.garden.aquascaper.email}</p>
-                    <h6>Plants found in this Garden:</h6>
+                    <p className="card-text">Created on: {new Date(props.garden.createdOn).toLocaleDateString('en-GB', optionsDate)}</p>
+                    {props.garden.modifiedOn ? <p className="card-text">Last Modified on: {new Date(props.garden.modifiedOn).toLocaleString('en-GB', optionsDate)}</p> : null}
                 </div>
                 
-                <div className="container d-flex justify-content-start flex-row">
-                    {renderGardenPlants(props.garden.plants)}
+                <div className="card-footer">
+                    <h5 className="card-title">Plants:</h5>
+                    <div className="row">
+                        {renderGardenPlants(props.garden.plants)}
+                    </div>
                 </div>
             </div>
 
@@ -170,7 +182,7 @@ function GardenViewDetails(props) {
                 </ul>
             </div>
                
-            <div className="card mt-3" style={{width: "80%"}}>
+            <div className="card mt-3" style={{width: "100%"}}>
                 <div className="card-header">
                     All Ratings and Comments
                 </div>
