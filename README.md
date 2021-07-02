@@ -50,7 +50,7 @@ The use of **Bootstrap Tabs and Floating Labels** are key features to navigate b
 
 ![Floating Label Example](https://www.jquery-az.com/wp-content/uploads/2018/02/26-4-Bootstrap-floating-lab.png) *Image from https://www.jquery-az.com/*
 
-![Navigation Tabs Example](https://assets.codepen.io/193912/internal/screenshots/pens/BlKxo.default.png?fit=cover&format=auto&ha=false&height=540&quality=75&v=2&version=1413915341&width=960) *Image from codepen.io*
+![Navigation Tabs Example](https://www.jquery-az.com/wp-content/uploads/2015/12/15.1.1-Bootstrap-tabs-dropdown-basic.png) *Image from https://www.jquery-az.com/*
 
 
 ## Main Technologies Used
