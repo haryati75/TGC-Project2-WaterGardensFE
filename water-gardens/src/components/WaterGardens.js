@@ -18,7 +18,7 @@ import GardenEditDetails from './GardenEditDetails';
 import PopupGardenRatingEdit from './PopupGardenRatingEdit';
 import PopupConfirmDelete from './PopupConfirmDelete';
 
-//const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us08.gitpod.io";
+// const baseURL = "https://3000-tan-trout-gu31y5ul.ws-us11.gitpod.io";
 
 // Express deployed in Heroku
 const baseURL = "https://hh-tgc12p2-watergardens-be.herokuapp.com";
@@ -101,7 +101,6 @@ class WaterGardens extends React.Component {
         'ratingBeingEdited' : 0,
         'editedRatingLevel' : 0,
         'editedRatingComment' : "",
-        'showEditRatingPopup': false,
 
         // popups - delete plant/garden, edit/delete rating
         'popupActive' : "",
@@ -187,9 +186,9 @@ class WaterGardens extends React.Component {
     }
 
     refreshHomeData = async () => {
-        let showN = "top?n=" + this.state.showN;
-        let plantCriteria = showN;
-        let gardenCriteria = showN;
+        let showN = "?n=" + this.state.showN;
+        let plantCriteria = "";
+        let gardenCriteria = "";
         let topPlantsData = [];
         let topGardensData = [];
 
@@ -197,7 +196,7 @@ class WaterGardens extends React.Component {
 
         if (this.state.homeSelectedListing === "beginners") {
             plantCriteria += "&care=easy";
-            gardenCriteria += "&level=beginner";
+            gardenCriteria += "&complexity=beginner";
 
         } else if (this.state.homeSelectedListing === "popular") {
             plantCriteria += "&likes=10";
@@ -211,18 +210,22 @@ class WaterGardens extends React.Component {
             gardenCriteria += "&rating=-3";
         }
 
-        topPlantsData = await this.fetchData("/plants/" + plantCriteria);
+        topPlantsData = await this.fetchData("/plants/top" + showN + plantCriteria);
 
         if (this.state.homeSelectedListing === "professionals") {
-            topGardensData = await this.fetchData("/aquascapers/" + gardenCriteria);
+            // top aquascapers criteria are predefined in API
+            topGardensData = await this.fetchData("/aquascapers/top" + showN);
         } else {
-            topGardensData = await this.fetchData("/gardens/" + gardenCriteria);
+            topGardensData = await this.fetchData("/gardens/top" + showN + gardenCriteria);
         }
+
+        let statsGardensData = await this.fetchData("/gardens/ratings");
 
         // Filter and sort the topGardens' ratings to show top 3 ratings only
         this.setState({
             'topPlants' : topPlantsData,
             'topGardens' : this.sortTopGardensRatings(topGardensData),
+            'statsGardens' : statsGardensData
         })
     }
 
@@ -259,11 +262,23 @@ class WaterGardens extends React.Component {
     // ------------------------
     filterGardensData = async () => {
         let filteredGardensData = []
-        if (this.state.criteriaSearchGardenListing !== "") {
-            filteredGardensData = await this.fetchData("/gardens?search=" + this.state.criteriaSearchGardenListing);
-        } else {
-            filteredGardensData = await this.fetchData("/gardens");
+        let criteria = "?n=20";
+
+        if (this.state.criteriaSearchGardenListing.length) {
+            criteria += "&search=" + this.state.criteriaSearchGardenListing;
+        } 
+
+        if (this.state.aquascaperSelectedGardenListing.length) {
+            criteria += "&aquascaper=" + this.state.aquascaperSelectedGardenListing;
         }
+
+        if (this.state.complexityLevelSelectedGardenListing.length) {
+            criteria += "&complexity=" + this.state.complexityLevelSelectedGardenListing;
+        }
+
+        console.log("Filter Garden Criteria: ", criteria)
+
+        filteredGardensData = await this.fetchData("/gardens" + criteria);
     
         this.setState({
             'gardens': filteredGardensData
@@ -411,9 +426,12 @@ class WaterGardens extends React.Component {
                 ...this.state.gardens.slice(indexToChange + 1)
             ];
 
+            let statsGardensData = await this.fetchData("/gardens/ratings");
+
             this.setState({
                 gardenBeingShown : clonedGarden,
                 gardens : clonedGardensArray,
+                statsGardens : statsGardensData,
                 'toAddGardenRatingLevel' : 0,
                 'toAddGardenRatingComment' : ""
             })
@@ -440,9 +458,12 @@ class WaterGardens extends React.Component {
                 ...this.state.gardens.slice(indexToChange + 1)
             ];
 
+            let statsGardensData = await this.fetchData("/gardens/ratings");
+
             this.setState({
                 gardenBeingShown : clonedGarden,
-                gardens : clonedGardensArray
+                gardens : clonedGardensArray,
+                statsGardens : statsGardensData
             })
 
         } catch (e) {
@@ -797,7 +818,7 @@ class WaterGardens extends React.Component {
             // /garden/:gid/rating/:rid/edit
             await axios.put(baseURL + "/garden/" + gardenId + "/rating/" + this.state.ratingBeingEdited + "/edit", 
             {
-                'level' : this.state.editedRatingLevel,
+                'level' : parseInt(this.state.editedRatingLevel),
                 'comment' : this.state.editedRatingComment
             });
 
@@ -814,10 +835,14 @@ class WaterGardens extends React.Component {
                 ...this.state.gardens.slice(indexToChange + 1)
             ];
 
+            // statsGarden also need to update with latest ratings
+            let statsGardensData = await this.fetchData("/gardens/ratings");
+
             // return back to view Garden
             this.setState({
                 'gardens' : clonedArray,
                 'gardenBeingShown' : modifiedGarden,
+                'statsGardens' : statsGardensData,
                 'active': 'garden-view',
                 'ratingBeingEdited' : 0,
                 'editedRatingLevel' : 0,
@@ -1032,11 +1057,11 @@ class WaterGardens extends React.Component {
                     <GardenListing 
                         gardens={this.state.gardens}
                         statsGardens={this.state.statsGardens}
-                        criteriaSearchGardenListing={this.state.criteriaSearchGardenListing}
-                        filterGardensData={this.filterGardensData}
-                        aquascaperNames={this.state.aquascaperNames}
+                        criteriaSearchGardenListing={this.state.criteriaSearchGardenListing}                        
                         aquascaperSelectedGardenListing={this.state.aquascaperSelectedGardenListing}
                         complexityLevelSelectedGardenListing={this.state.complexityLevelSelectedGardenListing}
+                        filterGardensData={this.filterGardensData}
+                        aquascaperNames={this.state.aquascaperNames}
                         updateFormField={this.updateFormField}
                         viewGardenDetails={this.viewGardenDetails}
                     />

@@ -1,4 +1,5 @@
 import React from 'react';
+const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
 const ratingLevels = [
     {key: "5", label: "star1"}, 
@@ -8,7 +9,18 @@ const ratingLevels = [
     {key: "1", label: "star5"}
 ]
 
-const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+const complexityLevels = [
+    {key: "beginner", label: "Beginner"}, 
+    {key: "intermediate", label: "Intermediate"},
+    {key: "semi-professional", label: "Semi-Professional"},
+    {key: "professional", label: "Professional"}
+]
+
+
+function toComplexityLabel (key) {
+    let obj = complexityLevels.filter(c => c.key === key.toLowerCase() ? c : null)[0];
+    return (obj != null ? obj.label : key);
+}
 
 function renderRatingLevels (props) {
     // Ratings via fontawesom icons in CSS
@@ -88,7 +100,7 @@ function renderGardenRatingsStats (gardenId, statsGardens) {
     let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
     if (stats !== undefined) {
         return (<React.Fragment key={gardenId}>
-            <li className="list-group-item card-text">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave})</li>
+            <li className="list-group-item card-text">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave.toFixed(2)})</li>
             <li className="list-group-item card-text">Total: {stats.count}</li>
             <li className="list-group-item card-text">Highest: {renderRatingIcons(stats.max)}</li>
             <li className="list-group-item card-text">Lowest: {renderRatingIcons(stats.min)}</li>
@@ -116,7 +128,7 @@ function GardenViewDetails(props) {
                     <div className="col col-12 col-md-8">
                         <ul className="list-group list-group-flush">  
                             <li className="list-group-item card-text">{props.garden.desc}</li>                      
-                            <li className="list-group-item card-text">Complexity: {props.garden.complexityLevel}</li>
+                            <li className="list-group-item card-text">Complexity: {toComplexityLabel(props.garden.complexityLevel)}</li>
                             <li className="list-group-item card-text">Weeks To Complete: {props.garden.weeksToComplete}</li>
                             <li className="list-group-item card-text">Completion Date: {new Date(props.garden.completionDate).toLocaleDateString('en-GB', optionsDate)}</li>
                             <li className="list-group-item card-text">Website: <a href={props.garden.aquascaper.email} target="_blank" rel="noopener noreferrer">{props.garden.aquascaper.email}</a></li>

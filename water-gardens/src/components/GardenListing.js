@@ -1,32 +1,4 @@
 import React from 'react';
-
-function renderAquascaperNamesDropdown(props) {
-    // Dropdown list for Complexity
-    return (
-        <React.Fragment key={1}>
-            <div className="form-floating">
-                <select 
-                    className="form-select" 
-                    aria-label=".form-select"
-                    id="aquascaperSelectedGardenListing"
-                    name="aquascaperSelectedGardenListing"
-                    value={props.aquascaperSelectedGardenListing}
-                    onChange={props.updateFormField}
-                    >      
-                    <option value={""}>Show All</option>  
-                    {props.aquascaperNames.map( l => 
-                        <React.Fragment key={l}>
-                            <option value={l}>{l}</option>
-                        </React.Fragment>
-                    )}
-                </select>
-                <label htmlFor="aquascaperSelectedGardenListing">Select Aquascaper</label>
-            </div>
-
-        </React.Fragment>
-    )
-}
-
 const complexityLevels = [
     {key: "beginner", label: "Beginner"}, 
     {key: "intermediate", label: "Intermediate"},
@@ -39,30 +11,25 @@ function toComplexityLabel (key) {
     return (obj != null ? obj.label : key);
 }
 
-function renderComplexityLevels(props) {
-    // Dropdown list for Complexity
-    return (
-        <React.Fragment key={1}>
-            <div className="form-floating">
-                <select 
-                    className="form-select" 
-                    id="complexityLevelSelectedGardenListing"
-                    aria-label=".form-select"
-                    name="complexityLevelSelectedGardenListing"
-                    value={props.complexityLevelSelectedGardenListing}
-                    onChange={props.updateFormField}
-                    >
-                    <option value="">Show All</option>
-                    {complexityLevels.map( l => 
-                        <React.Fragment key={l.key}>
-                            <option value={l.key}>{l.label}</option>
-                        </React.Fragment>
-                    )}
-                </select>
-                <label htmlFor="complexityLevelSelectedGardenListing">Select Complexity</label>
-            </div>
-        </React.Fragment>
-    )
+function renderedDropdown(keyLabels) {
+    // not a key/label pair but is a string array
+    if (!keyLabels[0].key && Array.isArray(keyLabels)) { 
+        return (
+            keyLabels.map( item => 
+                <React.Fragment key={item}>
+                    <option value={item}>{item}</option>
+                </React.Fragment>
+            )
+        )
+    } else {
+        return (
+            keyLabels.map( item => 
+                <React.Fragment key={item.key}>
+                    <option value={item.key}>{item.label}</option>
+                </React.Fragment>
+            )
+        )
+    }
 }
 
 function renderRatingIcons(n) {
@@ -107,17 +74,6 @@ function renderGardenPlants(plants) {
 }
 
 function GardenListing(props) {
-
-    let gardensToList = props.gardens;
-
-    if (props.aquascaperSelectedGardenListing !== "") {
-        gardensToList = props.gardens.filter(g => g.aquascaper.name === props.aquascaperSelectedGardenListing ? g : null)
-    } 
-
-    if (props.complexityLevelSelectedGardenListing !== "") {
-        gardensToList = gardensToList.filter(g => g.complexityLevel === props.complexityLevelSelectedGardenListing ? g : null)
-    } 
-
     return (
         <React.Fragment>
             <div className="sub-header">
@@ -125,15 +81,38 @@ function GardenListing(props) {
             </div>
 
             <div className="row g-3">
+
                 <div className="col-md">
-                    {renderAquascaperNamesDropdown(props)}
-                </div>
-                <div className="col-md">
-                    {renderComplexityLevels(props)}
+                    <div className="form-floating">
+                        <select className="form-select" 
+                            id="aquascaperSelectedGardenListing" 
+                            name="aquascaperSelectedGardenListing"
+                            value={props.aquascaperSelectedGardenListing}
+                            onChange={props.updateFormField}
+                            aria-label="List by Aquascaper">
+                            <option value="">Show All</option>
+                            {renderedDropdown(props.aquascaperNames)}
+                        </select>
+                        <label htmlFor="aquascaperSelectedGardenListing">Select Aquascaper</label>
+                    </div>
                 </div>
 
                 <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" 
+                            id="complexityLevelSelectedGardenListing" 
+                            name="complexityLevelSelectedGardenListing"
+                            value={props.complexityLevelSelectedGardenListing}
+                            onChange={props.updateFormField}
+                            aria-label="List By Garden Complexity">
+                            <option value="">Show All</option>
+                            {renderedDropdown(complexityLevels)}
+                        </select>
+                        <label htmlFor="complexityLevelSelectedGardenListing">Select Complexity</label>
+                    </div>
+                </div>
 
+                <div className="col-md">
                     <div className="input-group mb-3">
                         <input type="text" 
                             className="form-control" 
@@ -157,7 +136,7 @@ function GardenListing(props) {
             <hr></hr>
 
             <div className="row">
-            {gardensToList.map( g => 
+            {props.gardens.map( g => 
                 <React.Fragment key={g._id}>
                     <div className="card col-12 col-md-6 col-lg-4 mx-auto">
                         <div className="card-body">

@@ -7,25 +7,13 @@ const complexityLevels = [
     {key: "professional", label: "Professional"}
 ]
 
-function renderComplexityLevels(props) {
-    // Dropdown list for Complexity
+function renderedDropdown(keyLabels) {
     return (
-        <React.Fragment>
-            <select 
-                className="form-select form-select-sm" 
-                aria-label=".form-select-sm example"
-                name="editedGardenComplexityLevel"
-                value={props.editedGardenComplexityLevel}
-                onChange={props.updateFormField}
-                >
-                <option value="">Select Complexity Level</option>
-                {complexityLevels.map( l => 
-                    <React.Fragment key={l.key}>
-                        <option value={l.key}>{l.label}</option>
-                    </React.Fragment>
-                )}
-            </select>
-        </React.Fragment>
+        keyLabels.map( item => 
+            <React.Fragment key={item.key}>
+                <option value={item.key}>{item.label}</option>
+            </React.Fragment>
+        )
     )
 }
 
@@ -33,9 +21,9 @@ function renderGardenPlants(plants, deleteGardenPlant) {
     let plantsJSX = [];
     for (let p of plants) {
         let e = (<React.Fragment key={p.id}>
-            <div className="card mx-3 text-center" style={{width : "18rem"}}>
+            <div className="card mx-3 text-center col-2">
                 <img className="card-img-top" src={p.photoURL} alt={p.name}/>
-                <div className="card-body">
+                <div className="card-footer">
                     <h6 className="card-subtitle mx-auto">{p.name} - {p.care}
                         <button className="btn btn-danger btn-sm ms-3"
                                 onClick={() => { deleteGardenPlant(p.id); }}
@@ -73,98 +61,134 @@ function renderAddGardenPlantsDropdown(props) {
 function GardenEditDetails (props) {
     return (
         <React.Fragment>
-            <h1>Edit Garden Details</h1>
-            <hr></hr>
-            <div>
-                <div className="label">Name of Garden</div>
-                <input
-                    type="text"
-                    className="form-control"
+
+            <div className="sub-header">
+                <h2>Edit Garden Details</h2>
+            </div>
+
+            <div className="form-floating mb-3">
+                <input type="text" className="form-control" 
+                    id="editedGardenName" placeholder="Garden Name"
                     name="editedGardenName"
                     value={props.editedGardenName}
                     onChange={props.updateFormField}
                 />
+                <label htmlFor="editedGardenName">Garden Name</label>
             </div>
-            <div>
-                <div className="label">Description</div>
-                <input
-                    type="text"
-                    className="form-control"
+
+            <div className="form-floating mb-3">
+                <textarea className="form-control" style={{height: "100px"}}
+                    placeholder="Describe Garden" 
+                    id="editedGardenDesc"
                     name="editedGardenDesc"
                     value={props.editedGardenDesc}
                     onChange={props.updateFormField}
-                />
-            </div>
-            <div>
-                <div className="label">Complexity:</div>
-                {renderComplexityLevels(props)}
-            </div>
-            <div>
-                <div className="label">Completion Date:</div>
-                <input
-                    type="date"
-                    className="form-control"
-                    name="editedGardenCompletionDate"
-                    value={props.editedGardenCompletionDate}
-                    onChange={props.updateFormField}
-                />
-            </div>
-            <div>
-                <div className="label">How many weeks do you take to complete it?</div>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="editedGardenWeeksToComplete"
-                    value={props.editedGardenWeeksToComplete}
-                    onChange={props.updateFormField}
-                />
+                ></textarea>
+                <label htmlFor="editedGardenDesc">Describe the garden briefly</label>
             </div>
 
-            <div>
-                <div className="label">Aquascaper Name:</div>
-                <input
-                    type="text"
-                    className="form-control"
+            <div className="row g-3 mb-3">
+
+                <div className="col-md">
+                    <div className="form-floating">
+                        <select className="form-select" 
+                            id="editedGardenComplexityLevel" 
+                            name="editedGardenComplexityLevel"
+                            value={props.editedGardenComplexityLevel}
+                            onChange={props.updateFormField}
+                            aria-label="Edit Garden Complexity">
+                            <option defaultValue>Select Complexity</option>
+                            {renderedDropdown(complexityLevels)}
+                        </select>
+                        <label htmlFor="editedGardenComplexityLevel">Select Complexity</label>
+                    </div>
+                </div>
+
+                <div className="col-md">
+                    <div className="label">Completion Date:</div>
+                    <input
+                        type="date"
+                        className="form-control"
+                        name="editedGardenCompletionDate"
+                        value={props.editedGardenCompletionDate}
+                        onChange={props.updateFormField}
+                    />
+                </div>
+
+                <div className="col-md">
+                    <div className="form-floating">
+                        <input type="text" className="form-control" 
+                            id="editedGardenWeeksToComplete" placeholder="Duration to Complete"
+                            name="editedGardenWeeksToComplete"
+                            value={props.editedGardenWeeksToComplete}
+                            onChange={props.updateFormField}
+                        />
+                        <label htmlFor="editedGardenWeeksToComplete">Weeks to complete</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div className="card border-0">
+                <img className="rounded mx-auto d-block" style={{maxWidth : "80%"}} src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
+                
+                <div className="form-floating mb-3">
+                    <input type="text" className="form-control" 
+                        id="editedGardenPhotoURL" placeholder="URL of Garden Image"
+                        name="editedGardenPhotoURL"
+                        value={props.editedGardenPhotoURL}
+                        onChange={props.updateFormField}
+                    />
+                    <label htmlFor="editedGardenPhotoURL">Garden Image URL</label>
+                </div>
+            </div>
+
+
+            <hr></hr>
+
+            <div className="sub-header">
+                <h3>Aquascaper</h3>
+            </div>
+
+            <div className="form-floating mb-3">
+                <input type="text" className="form-control" 
+                    id="editedGardenAquascaperName" placeholder="Aquascaper Name"
                     name="editedGardenAquascaperName"
                     value={props.editedGardenAquascaperName}
                     onChange={props.updateFormField}
                 />
+                <label htmlFor="editedGardenAquascaperName">Aquascaper Name</label>
             </div>
-            <div>
-                <div className="label">Aquascaper Email:</div>
-                <input
-                    type="text"
-                    className="form-control"
+
+            <div className="form-floating mb-3">
+                <input type="text" className="form-control" 
+                    id="editedGardenAquascaperEmail" placeholder="Aquascaper Website"
                     name="editedGardenAquascaperEmail"
                     value={props.editedGardenAquascaperEmail}
                     onChange={props.updateFormField}
                 />
+                <label htmlFor="editedGardenAquascaperEmail">Aquascaper Website</label>
             </div>
 
-            <div className="card border-0">
-                <img className="rounded mx-auto d-block" style={{width : "50%"}} src={props.editedGardenPhotoURL} alt={props.editedGardenName}/>
-                <div className="label">Photo URL:</div>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="editedGardenPhotoURL"
-                    value={props.editedGardenPhotoURL}
-                    onChange={props.updateFormField}
-                />
-            </div>
+
             <hr></hr>
+
             <div className="card">
+                <div className="card-header sub-header">
+                    <h3>Plants used in this Garden</h3>
+                </div>
                 <div className="row">
-                    {props.editedGardenPlants.length > 0 ? <h6>Plants found in this Garden:</h6> : null}
+                    {!props.editedGardenPlants.length ? <h6>No plants found. Please add a Plant to the garden</h6> : null}
+                    
                     {renderGardenPlants(props.editedGardenPlants, props.deleteGardenPlant)}
                 </div>
             </div>
 
-            <div className="card my-auto" style={{width : "18rem"}}>
+            <div className="card my-auto mx-auto" style={{width : "18rem"}}>
                 {renderAddGardenPlantsDropdown(props)}
                 <img className="card-img-top mt-3" src={props.toAddGardenPlantPhotoURL} alt={props.toAddGardenPlantName}/>
                 <button
-                    className="btn btn-info me-3"
+                    className="btn btn-info mx-auto"
                     onClick={props.addGardenPlant}
                 >Add Plant to Garden</button>                
             </div>

@@ -7,17 +7,11 @@ const complexityLevels = [
     {key: "professional", label: "Professional"}
 ]
 
-function renderedDropdown(keyLabels, formField, updateFormField, fieldName) {
-    // Rendered List Dropdown 
+function renderedDropdown(keyLabels) {
     return (
         keyLabels.map( item => 
             <React.Fragment key={item.key}>
-                <option
-                    key={item.key}
-                    name={fieldName}
-                    value={formField}
-                    onChange={updateFormField}
-                >{item.label}</option>
+                <option value={item.key}>{item.label}</option>
             </React.Fragment>
         )
     )
@@ -41,7 +35,8 @@ function GardenAddNew(props) {
             </div>
 
             <div className="form-floating mb-3">
-                <textarea className="form-control" placeholder="Describe Garden" 
+                <textarea className="form-control" style={{height:"100px"}}
+                    placeholder="Describe Garden" 
                     id="newGardenDesc"
                     name="newGardenDesc"
                     value={props.newGardenDesc}
@@ -103,11 +98,13 @@ function GardenAddNew(props) {
                     />
                     <label htmlFor="newGardenPhotoURL">Garden Image URL</label>
                 </div>
-
             </div>
 
             <hr></hr>
-            <h3>Aquascaper Details: </h3>
+
+            <div className="sub-header">
+                <h3>Aquascaper</h3>
+            </div>
 
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" 

@@ -121,6 +121,7 @@ function Home(props) {
                                 {g.name}
                             </h3>
                             <h5 className="card-text text-listing">Aquascaper: {g.aquascaper.name}</h5>
+                            <p className="card-text text-listing">{g.desc}</p>
                             <p className="card-text text-listing">Complexity: {toComplexityLabel(g.complexityLevel)}</p>
 
                             <div className="card mt-3 mx-auto">
