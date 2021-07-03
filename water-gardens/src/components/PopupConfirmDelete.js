@@ -12,9 +12,12 @@ function PopupConfirmDelete (props) {
                         <button className="rounded" onClick={()=>{props.hideDeletePopup(false)}}>X</button>
                     </div>
 
-                    <div className="card-body">
-                        <img className="card-img-top img-thumbnail mx-auto" style={{maxWidth: "200px", maxHeight: "30vh"}} src={props.deletePhotoURL} alt={props.deleteName}/>
-                        <div className="card-text">
+                    <div className="card-body row g-2 d-flex flex-column">
+                        <div className="col mx-auto">
+                            <img className="card-img-top my-auto" style={{maxHeight:"30vh"}} src={props.deletePhotoURL} alt={props.deleteName}/>
+                        </div>
+                        
+                        <div className="card-text col my-auto">
                             Are you sure you want to delete {props.deleteName}?
                         </div>
                     </div>

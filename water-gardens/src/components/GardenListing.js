@@ -105,7 +105,7 @@ function GardenListing(props) {
                             value={props.complexityLevelSelectedGardenListing}
                             onChange={props.updateFormField}
                             aria-label="List By Garden Complexity">
-                            <option value="">Show All</option>
+                            <option value="" defaultValue>Show All</option>
                             {renderedDropdown(complexityLevels)}
                         </select>
                         <label htmlFor="complexityLevelSelectedGardenListing">Select Complexity</label>

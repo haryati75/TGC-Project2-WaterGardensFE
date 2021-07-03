@@ -12,7 +12,9 @@ const showNList = [
     {key: 1, label: "Show 1"},
     {key: 3, label: "Show 3"},
     {key: 5, label: "Show 5"},
-    {key: 10, label: "Show 10"}
+    {key: 10, label: "Show 10"},
+    {key: 10, label: "Show 20"},
+    {key: 10, label: "Show 50"}
 ];
 
 const complexityLevels = [

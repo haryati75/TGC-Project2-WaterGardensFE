@@ -86,7 +86,7 @@ function PlantAddNew(props) {
             </div>
  
             <div className="card border-0">
-                <img className="img-thumbnail mx-auto d-block" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
+                <img className="img-thumbnail mx-auto d-block col-4" src={props.newPlantPhotoURL} alt={props.newPlantName}/>
                 
                 <div className="form-floating mb-3">
                     <input type="text" className="form-control" 
@@ -97,7 +97,6 @@ function PlantAddNew(props) {
                     />
                     <label htmlFor="newPlantPhotoURL">Plant Image URL</label>
                 </div>
-
             </div>
 
             <button

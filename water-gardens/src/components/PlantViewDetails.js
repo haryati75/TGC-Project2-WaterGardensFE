@@ -7,25 +7,36 @@ function PlantViewDetails(props) {
 
                 <div className="card-header text-center">
                     <h2 className="card-title">{props.plant.name}</h2>
-                    <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "50%", maxHeight: "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
                 </div> 
                 
-                <div className="card-body">
+                <div className="card-body d-flex flex-column flex-md-row justify-content-center">
+
+                    <div className="col col-12 col-md-5">
+                        <img className="card-img-top rounded mx-auto d-block col-4" src={props.plant.photoURL} alt={props.plant.name}/>
+                    </div>
                     
-                    <p className="card-text">Ease of Care: {props.plant.care}</p>
-                    <p className="card-text">Lighting: {props.plant.lighting}</p>
-                    <p className="card-text">Appearance: {props.plant.appearance}</p>
+                    <div className="col col-12 col-md-4">
+                        <ul className="list-group list-group-flush">  
+                            <li className="list-group-item card-text">Appearance: {props.plant.appearance}</li>
+                            <li className="list-group-item card-text">Ease of Care: {props.plant.care}</li>
+                            <li className="list-group-item card-text">Lighting: {props.plant.lighting}</li>
+                        </ul>
+                    </div>
+
+                    <div className="col col-10 col-md-3">
+                        <div className="card-footer mx-auto">
+                            { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? 
+                                <h5 className="mb-2 text-center">Smart Tags</h5> 
+                                : null }
+                            {Array.isArray(props.plant.smartTags) ? 
+                                props.plant.smartTags.map(t => 
+                                    <span className="badge rounded-pill bg-warning text-dark mx-1">{t}</span>)
+                                : null }
+                        </div>
+                    </div>
 
                 </div>
-                <div className="card-footer">
-                    { Array.isArray(props.plant.smartTags) && props.plant.smartTags.length > 0 ? 
-                        <h5 className="mb-2">Keywords:</h5> 
-                        : null }
-                    {Array.isArray(props.plant.smartTags) ? 
-                        props.plant.smartTags.map(t => 
-                            <span className="badge rounded-pill bg-warning text-dark mx-1">{t}</span>)
-                        : null }
-                </div>
+
             </div>
 
             <div className="container d-flex justify-content-start flex-row mt-3">

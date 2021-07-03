@@ -1080,7 +1080,8 @@ class WaterGardens extends React.Component {
                         editedPlantLikes={this.state.editedPlantLikes}
                         editedPlantPhotoURL={this.state.editedPlantPhotoURL}
 
-                        editedPlantSmartTags={this.state.editedPlantSmartTags} 
+                        editedPlantSmartTags={this.state.editedPlantSmartTags}
+                        plantSmartTags={this.state.plantSmartTags}
                         toAddTag={this.state.toAddTag}
                         addSmartTag={this.addSmartTag}
                         deleteSmartTag={this.deleteSmartTag}

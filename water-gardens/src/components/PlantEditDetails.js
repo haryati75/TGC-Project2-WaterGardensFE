@@ -15,49 +15,27 @@ const lightingLevels = [
     {key: "high", label: "High"}
 ]
 
-// same as PlantAddNew but change the props field to Edit states in Parent
-function renderCareLevels (props) {
-    // Radio buttons for Ease of Care 
-    return (
-        careLevels.map( c => 
-            <React.Fragment key={c.key}>
-                <div className="form-check">
-                    <input
-                        type="radio"
-                        className="form-check-input"
-                        name="editedPlantCare"
-                        value={c.key}
-                        checked={ props.editedPlantCare === c.key }
-                        onChange={props.updateFormField}
-                    />
-                    <label className="form-check-label">{c.label}</label>
-                </div>
-            </React.Fragment>
+function renderedDropdown(keyLabels) {
+    // not a key/label pair but is a string array
+    if (!keyLabels[0].key && Array.isArray(keyLabels)) { 
+        return (
+            keyLabels.map( item => 
+                <React.Fragment key={item}>
+                    <option value={item}>{item}</option>
+                </React.Fragment>
+            )
         )
-    )
+    } else {
+        return (
+            keyLabels.map( item => 
+                <React.Fragment key={item.key}>
+                    <option value={item.key}>{item.label}</option>
+                </React.Fragment>
+            )
+        )
+    }
 }
 
-function renderLightingLevels (props) {
-    // Dropdown list for Lighting
-    return (
-        <React.Fragment>
-            <select 
-                className="form-select form-select-sm" 
-                aria-label=".form-select-sm example"
-                name="editedPlantLighting"
-                value={props.editedPlantLighting}
-                onChange={props.updateFormField}
-                >
-                <option value="">Select Lighting Level</option>
-                {lightingLevels.map( l => 
-                    <React.Fragment key={l.key}>
-                        <option value={l.key}>{l.label}</option>
-                    </React.Fragment>
-                )}
-            </select>
-        </React.Fragment>
-    )
-}
 
 function renderSmartTags (tags, deleteSmartTag) {
     let tagsJSX = [];
@@ -75,81 +53,140 @@ function renderSmartTags (tags, deleteSmartTag) {
     return tagsJSX;
 }
 
+
 function PlantEditDetails (props) {
 
     return (<React.Fragment>
-        <h1>Edit Plant Details</h1>
-        <div>
-            <div className="label">Name</div>
-            <input
-                type="text"
-                className="form-control"
+
+        <div className="sub-header">
+            <h2>Edit Aquatic Plant</h2>
+        </div>
+        
+        <div className="form-floating mb-3">
+            <input type="text" className="form-control" 
+                id="editedPlantName" placeholder="Plant Name"
                 name="editedPlantName"
-                placeholder="Enter new Name"
                 value={props.editedPlantName}
                 onChange={props.updateFormField}
             />
+            <label htmlFor="editedPlantName">Plant Name</label>
         </div>
-        <div>
-            <div className="label">Appearance</div>
-            <input
-                type="text"
-                className="form-control"
+
+        <div className="form-floating mb-3">
+            <textarea className="form-control" placeholder="Describe plant appearance" 
+                id="editedPlantAppearance"
                 name="editedPlantAppearance"
-                placeholder="Enter new Appearance"
                 value={props.editedPlantAppearance}
                 onChange={props.updateFormField}
-            />
+            ></textarea>
+            <label htmlFor="editedPlantAppearance">Describe its appearance</label>
         </div>
-        <div>
-            <div className="label">Ease of Care:</div>
-            {renderCareLevels(props)}
+
+        <div className="row g-2 mb-3">
+
+            <div className="col-md">
+                <div className="form-floating">
+                    <select className="form-select" 
+                        id="editedPlantCare" 
+                        aria-label="Edit Plant Care"
+                        name="editedPlantCare"
+                        value={props.editedPlantCare}
+                        onChange={props.updateFormField}
+                    >
+                        {renderedDropdown(careLevels)}
+                    </select>
+                    <label htmlFor="editedPlantCare">Ease of Care</label>
+                </div>
+            </div>
+
+            <div className="col-md">
+                <div className="form-floating">
+                    <select className="form-select" 
+                        id="editedPlantLighting" 
+                        aria-label="Edit Plant Lighting"
+                        name="editedPlantLighting"
+                        value={props.editedPlantLighting}
+                        onChange={props.updateFormField}                       
+                    >
+                        {renderedDropdown(lightingLevels)}
+                    </select>
+                    <label htmlFor="editedPlantLighting">Lighting Condition</label>
+                </div>
+            </div>
+
         </div>
-        <div>
-            <div className="label">Lighting:</div>
-            {renderLightingLevels(props)}
-        </div>
+
         <div className="card border-0">
-            <img className="img-thumbnail mx-auto d-block" src={props.editedPlantPhotoURL} alt={props.editedPlantName}/>
-            <div className="label">Photo URL:</div>
-                <input
-                    type="text"
-                    className="form-control"
+            <img className="img-thumbnail mx-auto d-block col-4" src={props.editedPlantPhotoURL} alt={props.editedPlantName}/>
+            
+            <div className="form-floating mb-3">
+                <input type="text" className="form-control" 
+                    id="editedPlantPhotoURL" placeholder="URL of Plant Image"
                     name="editedPlantPhotoURL"
                     value={props.editedPlantPhotoURL}
                     onChange={props.updateFormField}
                 />
+                <label htmlFor="editedPlantPhotoURL">Plant Image URL</label>
+            </div>
         </div>
         
         <hr></hr>
-        <p>Keywords:</p>
-        <ul>
-            {renderSmartTags(props.editedPlantSmartTags, props.deleteSmartTag)}
-        </ul>
-        <input 
-            type="text"
-            className="form-control"
-            name="toAddTag"
-            placeholder="Enter a new keyword"
-            value={props.toAddTag}
-            onChange={props.updateFormField}
-        />
-        <button
-            className="btn btn-primary me-3"
-            onClick={props.addSmartTag}
-        >Add Keyword
-        </button>
+
+        <div className="card">
+            <div className="card-header sub-header">
+                <h3>Smart Tags for Plant</h3>
+            </div>
+
+            <ul>
+                {renderSmartTags(props.editedPlantSmartTags, props.deleteSmartTag)}
+            </ul>
+        </div>
+
+        <div className="form-floating">
+            <select 
+                className="form-select" 
+                id="toAddTag"
+                aria-label=".form-select"
+                name="toAddTag"
+                value={props.toAddTag}
+                onChange={props.updateFormField}
+                >      
+                <option value={""}>Select an existing Smart Tag</option>
+                {renderedDropdown(props.plantSmartTags)}
+            </select>
+            <label htmlFor="toAddTag">Available Smart Tags</label>
+        </div>
+
+        <div className="input-group">
+            <input type="text" 
+                className="form-control" 
+                placeholder="Enter a new Smart Tag" 
+                aria-label="New Smart Tag" 
+                aria-describedby="btnAddSmartTag"
+                name="toAddTag"
+                value={props.toAddTag}
+                onChange={props.updateFormField}
+            />
+            <button className="btn btn-outline-secondary" 
+                type="button" 
+                id="btnAddSmartTag"
+                onClick={props.addSmartTag}>
+            Add Smart Tag</button>
+        </div>
+
         <hr></hr>
 
         <button
             className="btn btn-success me-3"
             onClick={() => { props.saveEditedPlant(props.plantIdBeingEdited); }}
-        >Save Changes
+        >
+            Save Changes
         </button>
         <button
             className="btn btn-secondary me-3"
             onClick={props.hidePlantEditDetails}
-        >Cancel
+        >
+            Cancel
         </button>
         
     </React.Fragment>)

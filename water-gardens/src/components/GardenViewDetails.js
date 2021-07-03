@@ -16,7 +16,6 @@ const complexityLevels = [
     {key: "professional", label: "Professional"}
 ]
 
-
 function toComplexityLabel (key) {
     let obj = complexityLevels.filter(c => c.key === key.toLowerCase() ? c : null)[0];
     return (obj != null ? obj.label : key);
@@ -121,7 +120,7 @@ function GardenViewDetails(props) {
                 <div className="card-header text-center">
                     <h2 className="card-title">Name: {props.garden.name}</h2>
                     <h3 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h3>
-                    <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "100%"}} src={props.garden.photoURL} alt={props.garden.name}/>
+                    <img className="rounded mt-3 mx-auto d-block col-10" src={props.garden.photoURL} alt={props.garden.name}/>
                     
                 </div>
                 <div className="card-body d-flex flex-md-row flex-column">
