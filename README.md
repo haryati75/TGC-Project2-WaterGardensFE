@@ -4,6 +4,10 @@ This is the front-end development using **React, Express/RESTful API and MongoDB
 
 **Web App** found: https://water-gardens.netlify.app/
 
+![Water Gardens Home Page](./wg-home.png)
+
+![Water Garden View Page](./wg-phone3.png)
+
 This project uses the **Five Planes of UI/UX** approach in designing the web app prior to its full-stack front-end and backend development:
 1. Strategy (B2C marketplace extension)
 2. Scope (Aquascaping Users)
@@ -48,10 +52,7 @@ As the project has potential commercialisation, the **information organisation**
 ### Surface: Visual 
 The use of **Bootstrap Tabs and Floating Labels** are key features to navigate between the React Stateless Components as well as to optimise screen-space in the Mobile-First design approach respectively.
 
-![Floating Label Example](https://www.jquery-az.com/wp-content/uploads/2018/02/26-4-Bootstrap-floating-lab.png) *Image from https://www.jquery-az.com/*
-
-![Navigation Tabs Example](https://www.jquery-az.com/wp-content/uploads/2015/12/15.1.1-Bootstrap-tabs-dropdown-basic.png) *Image from https://www.jquery-az.com/*
-
+![Mobile First Design](./wg-mobile-first.png)
 
 ## Main Technologies Used
 ### React

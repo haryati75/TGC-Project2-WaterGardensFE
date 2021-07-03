@@ -19,13 +19,13 @@ function PopupConfirmDelete (props) {
                         </div>
                     </div>
 
-                    <div className="card-footer">
+                    <div className="card-footer fixed-bottom">
                         <button 
-                            className="btn btn-secondary me-3" 
+                            className="btn btn-secondary me-3 my-auto" 
                             onClick={() => {props.hideDeletePopup(false)}}
                         >Close</button>
                         <button 
-                            className="btn btn-danger me-3" 
+                            className="btn btn-danger me-3 my-auto" 
                             onClick={() => {props.hideDeletePopup(true)}}
                         >Confirm Delete</button>
                     </div>

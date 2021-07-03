@@ -6,7 +6,7 @@ function PlantViewDetails(props) {
             <div className="card mt-3 g-1">
 
                 <div className="card-header text-center">
-                    <h1 className="card-title">{props.plant.name}</h1>
+                    <h2 className="card-title">{props.plant.name}</h2>
                     <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "50%", maxHeight: "50%"}} src={props.plant.photoURL} alt={props.plant.name}/>
                 </div> 
                 

@@ -28,7 +28,6 @@ function renderRatingLevels (props) {
         </React.Fragment>)
         ratingsJSX.push(e);
     }
-
     return ratingsJSX;
 }
 
@@ -89,8 +88,10 @@ function renderGardenRatingsStats (gardenId, statsGardens) {
     let stats = statsGardens.filter(g => g._id === gardenId ? g : null)[0];
     if (stats !== undefined) {
         return (<React.Fragment key={gardenId}>
-            <li className="list-group-item">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave}) - Total: {stats.count}</li>
-            <li className="list-group-item">Highest: {renderRatingIcons(stats.max)} - Lowest: {renderRatingIcons(stats.min)}</li>
+            <li className="list-group-item card-text">Average: {renderRatingIcons(Math.round(stats.ave))} ({stats.ave})</li>
+            <li className="list-group-item card-text">Total: {stats.count}</li>
+            <li className="list-group-item card-text">Highest: {renderRatingIcons(stats.max)}</li>
+            <li className="list-group-item card-text">Lowest: {renderRatingIcons(stats.min)}</li>
         </React.Fragment>)
     } else {
         return (<React.Fragment key={gardenId}>
@@ -106,18 +107,32 @@ function GardenViewDetails(props) {
             <div className="card mt-3 g-1">
 
                 <div className="card-header text-center">
-                    <h1 className="card-title">Name: {props.garden.name}</h1>
+                    <h2 className="card-title">Name: {props.garden.name}</h2>
                     <h3 className="card-subtitle">Aquascaper: {props.garden.aquascaper.name}</h3>
                     <img className="rounded mt-3 mx-auto d-block" style={{maxWidth : "100%"}} src={props.garden.photoURL} alt={props.garden.name}/>
+                    
                 </div>
-                <div className="card-body">
-                    <p className="card-text">Description: {props.garden.desc}</p>
-                    <p className="card-text">Complexity: {props.garden.complexityLevel}</p>
-                    <p className="card-text">Weeks To Complete: {props.garden.weeksToComplete}</p>
-                    <p className="card-text">Completion Date: {new Date(props.garden.completionDate).toLocaleDateString('en-GB', optionsDate)}</p>
-                    <p className="card-text">Website/Email: {props.garden.aquascaper.email}</p>
-                    <p className="card-text">Created on: {new Date(props.garden.createdOn).toLocaleDateString('en-GB', optionsDate)}</p>
-                    {props.garden.modifiedOn ? <p className="card-text">Last Modified on: {new Date(props.garden.modifiedOn).toLocaleString('en-GB', optionsDate)}</p> : null}
+                <div className="card-body d-flex flex-md-row flex-column">
+                    <div className="col col-12 col-md-8">
+                        <ul className="list-group list-group-flush">  
+                            <li className="list-group-item card-text">{props.garden.desc}</li>                      
+                            <li className="list-group-item card-text">Complexity: {props.garden.complexityLevel}</li>
+                            <li className="list-group-item card-text">Weeks To Complete: {props.garden.weeksToComplete}</li>
+                            <li className="list-group-item card-text">Completion Date: {new Date(props.garden.completionDate).toLocaleDateString('en-GB', optionsDate)}</li>
+                            <li className="list-group-item card-text">Website: <a href={props.garden.aquascaper.email} target="_blank" rel="noopener noreferrer">{props.garden.aquascaper.email}</a></li>
+                            <li className="list-group-item card-text">Created on: {new Date(props.garden.createdOn).toLocaleDateString('en-GB', optionsDate)}</li>
+                            <li className="list-group-item card-text">{props.garden.modifiedOn ? <p className="card-text">Last Modified on: {new Date(props.garden.modifiedOn).toLocaleString('en-GB', optionsDate)}</p> : null}</li>
+                        </ul>
+                    </div>
+
+                    <div className="card mt-3 my-auto mx-auto col-8 col-md-3">
+                        <div className="card-header">
+                            Ratings Statistics:
+                        </div>
+                        <ul className="list-group list-group-flush">
+                            {renderGardenRatingsStats(props.garden._id, props.statsGardens)}
+                        </ul>
+                    </div>                    
                 </div>
                 
                 <div className="card-footer">
@@ -148,7 +163,7 @@ function GardenViewDetails(props) {
             <hr></hr>
 
             <div className="row" style={{width : "80%"}}>
-                <div className="label">Rate this Garden: </div>
+                <div className="label">Please provide feedback on this Garden: </div>
                 <div className="container">
                     <div className="starrating d-flex justify-content-end flex-row-reverse">
                         {renderRatingLevels(props)}
@@ -170,17 +185,8 @@ function GardenViewDetails(props) {
             <button
                     className="btn btn-success me-3 mt-3"
                     onClick={() => { props.addGardenRating(props.garden._id)}}
-                >Submit your rating and comments
+                >Submit
             </button>
-
-            <div className="card mt-3" style={{width: "50%"}}>
-                <div className="card-header">
-                    Ratings Statistics:
-                </div>
-                <ul className="list-group list-group-flush">
-                    {renderGardenRatingsStats(props.garden._id, props.statsGardens)}
-                </ul>
-            </div>
                
             <div className="card mt-3" style={{width: "100%"}}>
                 <div className="card-header">
